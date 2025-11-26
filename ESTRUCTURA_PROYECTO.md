@@ -17,10 +17,17 @@ app/
 │   ├── CategoriaInstructor.php     # Categorías de instructores (regular, premium, invitado)
 │   ├── EstadoCompra.php            # Estados del flujo de compra
 │   ├── MetodoPago.php              # Métodos de pago disponibles
-│   └── ModalidadClase.php          # Modalidades de clase (individual, dúo, grupal)
+│   ├── ModalidadClase.php          # Modalidades de clase (individual, dúo, grupal)
+│   └── RolUsuario.php              # ⭐ Roles de usuario del sistema
 │
 ├── Http/
 │   ├── Controllers/
+│   │   ├── Auth/                   # 🔒 Autenticación
+│   │   │   ├── LoginController.php
+│   │   │   ├── RegisterController.php
+│   │   │   ├── ForgotPasswordController.php
+│   │   │   └── ResetPasswordController.php
+│   │   │
 │   │   ├── Admin/                  # 🔐 Funciones de Administrador
 │   │   │   ├── InstrumentoController.php   # RF-05.1: Gestión de instrumentos
 │   │   │   └── InstructorController.php    # RF-05.2: Gestión de instructores
@@ -35,7 +42,17 @@ app/
 │   │   └── Estudiante/             # 🎓 Funciones de Estudiante/Beneficiario
 │   │       └── CreditoController.php       # RF-02.1: Consultar créditos
 │   │
+│   ├── Middleware/                 # ⭐ Middleware de autorización
+│   │   ├── CheckAdministrador.php
+│   │   ├── CheckCliente.php
+│   │   ├── CheckCoordinador.php
+│   │   ├── CheckEstudiante.php
+│   │   └── CheckRole.php           # Middleware genérico para múltiples roles
+│   │
 │   └── Requests/                   # Validaciones de formularios
+│       ├── Auth/                   # ⭐ Validaciones de autenticación
+│       │   ├── LoginRequest.php
+│       │   └── RegisterRequest.php
 │       ├── Admin/
 │       │   ├── StoreInstrumentoRequest.php
 │       │   ├── UpdateInstrumentoRequest.php
@@ -47,6 +64,8 @@ app/
 │           └── VerificarPagoRequest.php
 │
 ├── Models/                         # Modelos Eloquent
+│   ├── User.php                    # ⭐ Usuario con relaciones a Role, Cliente, Beneficiario
+│   ├── Role.php                    # ⭐ Roles del sistema
 │   ├── Instrumento.php
 │   ├── Instructor.php
 │   ├── InstructorEspecialidad.php
@@ -70,6 +89,12 @@ app/
 ```
 resources/
 ├── views/
+│   ├── auth/                       # ⭐ Autenticación
+│   │   ├── login.blade.php
+│   │   ├── register.blade.php
+│   │   ├── forgot-password.blade.php
+│   │   └── reset-password.blade.php
+│   │
 │   ├── layouts/                    # Plantillas base
 │   │   ├── app.blade.php           # Layout principal
 │   │   ├── navigation.blade.php    # Barra de navegación
