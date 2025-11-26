@@ -1,0 +1,205 @@
+// SISTEMA DE CRÉDITOS MUSICALES - ACADEMIA ARMONÍA
+// Diagrama de Base de Datos
+
+Table users {
+  id BIGINT [pk, increment]
+  name VARCHAR(255) [not null]
+  email VARCHAR(255) [not null, unique]
+  email_verified_at TIMESTAMP [null]
+  password VARCHAR(255) [not null]
+  role ENUM('administrador', 'coordinador', 'cliente', 'estudiante', 'instructor') [not null, default: 'cliente']
+  remember_token VARCHAR(100) [null]
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    email [unique, name: 'idx_users_email']
+    role [name: 'idx_users_role']
+  }
+}
+
+Table clientes {
+  id BIGINT [pk, increment]
+  user_id BIGINT [not null, ref: > users.id]
+  telefono VARCHAR(255) [null]
+  direccion VARCHAR(255) [null]
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    user_id [name: 'idx_clientes_user_id']
+  }
+}
+
+Table estudiantes {
+  id BIGINT [pk, increment]
+  user_id BIGINT [not null, ref: > users.id]
+  cliente_id BIGINT [not null, ref: > clientes.id]
+  fecha_nacimiento DATE [null]
+  nivel VARCHAR(255) [null]
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    user_id [name: 'idx_estudiantes_user_id']
+    cliente_id [name: 'idx_estudiantes_cliente_id']
+  }
+}
+
+Table instructores {
+  id BIGINT [pk, increment]
+  nombre VARCHAR(255) [not null]
+  especialidad VARCHAR(255) [null]
+  tipo ENUM('regular', 'premium', 'invitado') [not null, default: 'regular']
+  tarifa_extra DECIMAL(5,2) [not null, default: 0]
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    tipo [name: 'idx_instructores_tipo']
+  }
+}
+
+Table instrumentos {
+  id BIGINT [pk, increment]
+  nombre VARCHAR(255) [not null]
+  tipo ENUM('basico', 'intermedio', 'avanzado', 'especializado') [not null, default: 'basico']
+  tarifa_extra DECIMAL(5,2) [not null, default: 0]
+  disponible_alquiler BOOLEAN [not null, default: false]
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    tipo [name: 'idx_instrumentos_tipo']
+    disponible_alquiler [name: 'idx_instrumentos_alquiler']
+  }
+}
+
+Table paquetes {
+  id BIGINT [pk, increment]
+  nombre VARCHAR(255) [not null]
+  minutos INTEGER [not null]
+  descuento DECIMAL(5,2) [not null, default: 0]
+  precio DECIMAL(10,2) [not null]
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    minutos [name: 'idx_paquetes_minutos']
+  }
+}
+
+Table compras {
+  id BIGINT [pk, increment]
+  cliente_id BIGINT [not null, ref: > clientes.id]
+  paquete_id BIGINT [not null, ref: > paquetes.id]
+  total_minutos INTEGER [not null]
+  precio_total DECIMAL(10,2) [not null]
+  estado ENUM('pendiente', 'completada', 'cancelada') [not null, default: 'pendiente']
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    cliente_id [name: 'idx_compras_cliente_id']
+    paquete_id [name: 'idx_compras_paquete_id']
+    estado [name: 'idx_compras_estado']
+    created_at [name: 'idx_compras_created_at']
+  }
+}
+
+Table pagos {
+  id BIGINT [pk, increment]
+  compra_id BIGINT [not null, ref: > compras.id]
+  monto DECIMAL(10,2) [not null]
+  metodo_pago ENUM('transferencia', 'qr', 'efectivo') [not null, default: 'transferencia']
+  comprobante VARCHAR(255) [null]
+  estado ENUM('pendiente', 'verificado', 'rechazado') [not null, default: 'pendiente']
+  verificado_por BIGINT [null, ref: > users.id]
+  fecha_verificacion TIMESTAMP [null]
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    compra_id [name: 'idx_pagos_compra_id']
+    estado [name: 'idx_pagos_estado']
+    verificado_por [name: 'idx_pagos_verificado_por']
+  }
+}
+
+Table distribucion_creditos {
+  id BIGINT [pk, increment]
+  compra_id BIGINT [not null, ref: > compras.id]
+  estudiante_id BIGINT [not null, ref: > estudiantes.id]
+  minutos_asignados INTEGER [not null]
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    compra_id [name: 'idx_distribucion_compra_id']
+    estudiante_id [name: 'idx_distribucion_estudiante_id']
+  }
+}
+
+Table creditos {
+  id BIGINT [pk, increment]
+  estudiante_id BIGINT [not null, ref: > estudiantes.id]
+  minutos_totales INTEGER [not null, default: 0]
+  minutos_usados INTEGER [not null, default: 0]
+  minutos_disponibles INTEGER [not null, default: 0]
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    estudiante_id [unique, name: 'idx_creditos_estudiante_id']
+  }
+}
+
+Table citas {
+  id BIGINT [pk, increment]
+  estudiante_id BIGINT [not null, ref: > estudiantes.id]
+  instructor_id BIGINT [null, ref: > instructores.id]
+  instrumento_id BIGINT [not null, ref: > instrumentos.id]
+  fecha_hora DATETIME [not null]
+  duracion_estimada INTEGER [not null]
+  estado ENUM('pendiente', 'confirmada', 'completada', 'cancelada') [not null, default: 'pendiente']
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    estudiante_id [name: 'idx_citas_estudiante_id']
+    instructor_id [name: 'idx_citas_instructor_id']
+    instrumento_id [name: 'idx_citas_instrumento_id']
+    fecha_hora [name: 'idx_citas_fecha_hora']
+    estado [name: 'idx_citas_estado']
+  }
+}
+
+Table clases {
+  id BIGINT [pk, increment]
+  cita_id BIGINT [not null, ref: > citas.id]
+  minutos_consumidos INTEGER [not null]
+  modalidad ENUM('individual', 'duo', 'grupal', 'masterclass') [not null, default: 'individual']
+  notas TEXT [null]
+  created_at TIMESTAMP [null]
+  updated_at TIMESTAMP [null]
+
+  indexes {
+    cita_id [unique, name: 'idx_clases_cita_id']
+    modalidad [name: 'idx_clases_modalidad']
+  }
+}
+
+// RELACIONES ADICIONALES (Documentación)
+// users -> clientes (1:1)
+// users -> estudiantes (1:1)
+// clientes -> estudiantes (1:N - un cliente puede tener hasta 4 beneficiarios)
+// clientes -> compras (1:N)
+// paquetes -> compras (1:N)
+// compras -> pagos (1:1)
+// compras -> distribucion_creditos (1:N)
+// estudiantes -> distribucion_creditos (1:N)
+// estudiantes -> creditos (1:1)
+// estudiantes -> citas (1:N)
+// instructores -> citas (1:N)
+// instrumentos -> citas (1:N)
+// citas -> clases (1:1)
