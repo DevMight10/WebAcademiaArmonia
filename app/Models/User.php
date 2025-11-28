@@ -72,12 +72,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the instructor profile if user is an instructor.
+     */
+    public function instructor()
+    {
+        return $this->hasOne(Instructor::class);
+    }
+
+    /**
      * Check if user has a specific role.
      */
     public function hasRole(string $roleSlug): bool
     {
-        // TODO: Implement role checking logic
-        return false;
+        return $this->role && $this->role->slug === $roleSlug;
     }
 
     /**
@@ -85,8 +92,7 @@ class User extends Authenticatable
      */
     public function isAdministrador(): bool
     {
-        // TODO: Implement logic
-        return false;
+        return $this->hasRole('administrador');
     }
 
     /**
@@ -94,8 +100,15 @@ class User extends Authenticatable
      */
     public function isCoordinador(): bool
     {
-        // TODO: Implement logic
-        return false;
+        return $this->hasRole('coordinador');
+    }
+
+    /**
+     * Check if user is an instructor.
+     */
+    public function isInstructor(): bool
+    {
+        return $this->hasRole('instructor');
     }
 
     /**
@@ -103,8 +116,7 @@ class User extends Authenticatable
      */
     public function isCliente(): bool
     {
-        // TODO: Implement logic
-        return false;
+        return $this->cliente()->exists();
     }
 
     /**
@@ -112,7 +124,6 @@ class User extends Authenticatable
      */
     public function isEstudiante(): bool
     {
-        // TODO: Implement logic
-        return false;
+        return $this->beneficiario()->exists();
     }
 }

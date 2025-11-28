@@ -12,11 +12,9 @@ class Instructor extends Model
     protected $table = 'instructores';
 
     protected $fillable = [
-        'nombre',
-        'apellido',
+        'user_id',
         'ci',
         'telefono',
-        'email',
         'categoria',
         'factor_costo',
         'estado',
@@ -26,6 +24,14 @@ class Instructor extends Model
         'factor_costo' => 'decimal:2',
         'estado' => 'boolean',
     ];
+
+    /**
+     * Get the user associated with the instructor.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Get the especialidades for the instructor.

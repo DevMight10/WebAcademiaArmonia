@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('instructores', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('apellido');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('ci')->unique();
-            $table->string('telefono');
-            $table->string('email')->unique();
-            $table->string('categoria');
+            $table->string('telefono')->nullable();
+            $table->string('categoria'); // regular, premium, invitado
             $table->decimal('factor_costo', 8, 2);
             $table->boolean('estado')->default(true);
             $table->timestamps();
