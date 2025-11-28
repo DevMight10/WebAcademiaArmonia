@@ -1,19 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Iniciar Sesión - Academia Armonía</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="antialiased bg-gray-50">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="max-w-md w-full">
-            <x-card title="Iniciar Sesión">
-                {{-- Login form will go here --}}
-            </x-card>
-        </div>
-    </div>
+<body>
+    <h1>Hola bienvenido al login</h1>
 </body>
 </html>
