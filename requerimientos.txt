@@ -1,0 +1,539 @@
+
+CASO DE ESTUDIO: SISTEMA DE CRÉDITOS MUSICALES PARA "ACADEMIA ARMONÍA" SRL
+
+Contexto del Problema
+                          "Academia Armonía" es una reconocida escuela de música en la ciudad de La Paz que ofrece clases personalizadas de diversos instrumentos musicales. Con más de 15 años de trayectoria, la academia ha identificado que el aprendizaje musical requiere flexibilidad en horarios y frecuencia de clases, ya que cada estudiante tiene ritmos de aprendizaje y disponibilidad de tiempo diferentes.
+La enseñanza musical personalizada implica que algunos estudiantes necesitan más tiempo para dominar técnicas básicas, mientras otros avanzan rápidamente y requieren clases más intensivas. Además, algunos estudiantes prefieren concentrar sus clases en períodos específicos (vacaciones, preparación para exámenes, presentaciones), mientras otros mantienen un ritmo constante durante todo el año.
+Para adaptarse a estas necesidades variables, la academia ha desarrollado un innovador sistema de "Créditos Musicales" que permite a los estudiantes adquirir tiempo de clase de forma flexible y utilizarlo según sus necesidades específicas de aprendizaje.
+Requerimientos del Sistema
+Se requiere un sistema de información que permita a "Academia Armonía" gestionar la venta y consumo de créditos musicales bajo las siguientes políticas:
+Sistema de Créditos Musicales
+Para los servicios de enseñanza musical utilizan "Créditos de Tiempo" medidos en minutos de clase personalizada. Las clases pueden durar 30, 45, 60, 90 o 120 minutos según las necesidades del estudiante y la complejidad del instrumento. Algunos instrumentos como piano y violín requieren sesiones más largas para práctica técnica, mientras que instrumentos como guitarra o canto pueden trabajarse en sesiones más cortas pero frecuentes.
+Política de Venta de Créditos
+El proceso de venta de servicios musicales se basa en la compra de "Créditos de Minutos". Un cliente puede comprar desde 30 minutos (costo de 25 Bs por minuto) hasta la cantidad que desee. Para incentivar la compra en volumen, la academia organizó la venta en paquetes con descuentos escalonados:
+•	Paquete básico: Cada 300 minutos (5 horas) obtiene 5% de descuento
+•	Paquete intermedio: 600 minutos (10 horas) obtiene 10% de descuento
+•	Paquete avanzado: 900 minutos (15 horas) obtiene 15% de descuento
+•	Y así sucesivamente hasta alcanzar el descuento máximo del 45%
+•	Paquete premium: 2,700 minutos (45 horas) obtiene 45% de descuento
+•	Si compra más de 2,700 minutos, el descuento máximo se mantiene en 45%
+Distribución de Créditos Entre Beneficiarios
+Al momento de comprar, un cliente puede registrar hasta 4 personas (incluyéndose) para usar los créditos adquiridos, indicando cómo distribuye los minutos entre los beneficiarios. Por ejemplo:
+•	María compra 1,200 minutos y registra a sus tres hijos: 
+o	400 minutos para María (clases de piano)
+o	300 minutos para Juan (clases de guitarra)
+o	250 minutos para Ana (clases de violín)
+o	250 minutos para Pedro (clases de batería)
+Esta distribución es completamente variable y la define quien realiza la compra.
+Sistema de Agendamiento
+Durante la planificación de clases, cada estudiante que tiene créditos disponibles debe agendar una cita especificando:
+•	Fecha y hora preferida
+•	Instructor deseado
+•	Instrumento a estudiar
+•	Duración estimada de la clase
+•	El personal de la academia confirma disponibilidad y asigna el instructor
+Consumo de Créditos por Sesión
+Al iniciar cada clase, el instructor revisa los créditos disponibles del estudiante y acuerda la duración de la sesión. Esto permite al estudiante:
+•	Conocer exactamente cuántos minutos consumirá
+•	Decidir si necesita comprar más créditos
+•	Ajustar la intensidad de la clase según sus créditos disponibles
+•	Planificar mejor sus próximas sesiones
+Control de Saldos y Transparencia
+El sistema debe mantener registro detallado de:
+•	Consumo de minutos por sesión
+•	Saldo actualizado de créditos disponibles
+•	Histórico de clases tomadas con cada instructor
+•	Esta información debe ser accesible al estudiante mediante una cuenta personal donde puede consultar su saldo y el detalle de minutos utilizados en diferentes clases
+Política de Uso de Créditos
+•	No se imparten clases sin créditos disponibles previamente comprados
+•	Los créditos no utilizados se acumulan indefinidamente (sin fecha de caducidad)
+•	Los créditos pueden combinarse con nuevas compras
+•	Los créditos son transferibles entre beneficiarios registrados por el comprador original
+Sistema de Compras en Línea
+Los estudiantes pueden acceder al sistema para:
+•	Ver ofertas actuales de paquetes de créditos
+•	Realizar compras en línea de créditos musicales
+•	Un coordinador académico atiende los pedidos en línea
+•	Solicita pago mediante: 
+o	Transferencia bancaria
+o	Código QR
+o	Depósito en efectivo
+•	El coordinador verifica el pago recibido y confirma la venta
+•	Los créditos se abonan automáticamente a la cuenta del cliente
+La academia planea automatizar completamente el proceso de pago mediante pasarelas de pago en línea y métodos de pago digitales.
+Consideraciones Específicas del Sector Musical
+Tipos de Instrumento y Tarifas Especiales
+•	Instrumentos básicos: Guitarra, ukelele (tarifa estándar)
+•	Instrumentos intermedios: Piano, violín, flauta (tarifa estándar)
+•	Instrumentos avanzados: Saxofón, batería, canto lírico (+15% sobre tarifa)
+•	Instrumentos especializados: Arpa, violonchelo, trompeta (+25% sobre tarifa)
+Modalidades de Clase
+•	Individual: Consumo normal de créditos
+•	Dúo: Cada estudiante consume 75% de los créditos normales
+•	Grupal (3-4 personas): Cada estudiante consume 60% de los créditos normales
+•	Masterclass: Consumo especial según el instructor invitado
+Instructores Especializados
+•	Instructores regulares: Tarifa estándar de créditos
+•	Instructores premium: +20% en consumo de créditos
+•	Instructores invitados: Tarifa especial variable según prestigio
+Servicios Adicionales
+•	Preparación para exámenes: Consumo normal + materiales
+•	Preparación para presentaciones: Tarifa premium
+•	Grabación de demos: Consumo de créditos + costo de estudio
+•	Alquiler de instrumentos: Descuento del saldo de créditos
+________________________________________
+INSTRUCCIONES PARA EL ESTUDIANTE:
+Analizar el enunciado y completar el desarrollo del sistema de información. Puede aumentar atributos y realizar consideraciones necesarias siempre y cuando no contradiga el enunciado explícito del problema.
+
+
+
+
+
+ESPECIFICACIÓN DE REQUERIMIENTOS DEL SISTEMA
+Sistema de Créditos Musicales - Academia Armonía SRL
+________________________________________
+1. ACTORES DEL SISTEMA
+Actor 1: Cliente/Comprador
+Descripción: Persona que adquiere paquetes de créditos musicales para sí mismo o para terceros.
+Responsabilidades:
+•	Comprar paquetes de créditos
+•	Registrar beneficiarios (hasta 4 personas)
+•	Distribuir créditos entre beneficiarios
+•	Realizar pagos por transferencia/QR/efectivo
+•	Consultar historial de compras
+________________________________________
+Actor 2: Estudiante/Beneficiario
+Descripción: Persona autorizada para consumir los créditos adquiridos (puede ser el mismo comprador u otra persona registrada).
+Responsabilidades:
+•	Agendar clases musicales
+•	Consultar saldo de créditos disponibles
+•	Consultar historial de clases tomadas
+•	Asistir a clases programadas
+•	Solicitar transferencia de créditos entre beneficiarios
+________________________________________
+Actor 3: Instructor
+Descripción: Profesor que imparte las clases musicales.
+Responsabilidades:
+•	Verificar créditos disponibles del estudiante antes de iniciar clase
+•	Registrar inicio de clase
+•	Impartir la clase musical
+•	Registrar finalización de clase
+•	Confirmar consumo de créditos
+________________________________________
+Actor 4: Coordinador Académico
+Descripción: Personal administrativo que gestiona pedidos, pagos y asignación de clases.
+Responsabilidades:
+•	Atender pedidos de compra en línea
+•	Solicitar y verificar pagos
+•	Confirmar ventas y abonar créditos
+•	Confirmar disponibilidad de instructores
+•	Asignar instructores a clases
+•	Gestionar el calendario de clases
+________________________________________
+Actor 5: Administrador del Sistema
+Descripción: Responsable de la configuración y mantenimiento del sistema.
+Responsabilidades:
+•	Gestionar catálogo de instrumentos y tarifas
+•	Gestionar información de instructores
+•	Configurar políticas de descuento
+•	Generar reportes administrativos
+•	Gestionar usuarios del sistema
+________________________________________
+2. REQUERIMIENTOS FUNCIONALES
+RF-01: Gestión de Compra de Créditos
+RF-01.1: Visualizar Paquetes de Créditos
+Actor: Cliente/Comprador
+Descripción: El sistema debe permitir visualizar los paquetes de créditos disponibles con sus respectivos descuentos.
+Precondiciones:
+•	El cliente debe tener acceso al sistema
+Flujo Principal:
+1.	El cliente accede al módulo de compras
+2.	El sistema muestra los paquetes disponibles con: 
+o	Cantidad de minutos
+o	Precio base (25 Bs/minuto)
+o	Porcentaje de descuento aplicable
+o	Precio final
+3.	El sistema calcula descuentos según: 
+o	300-599 min: 5% descuento
+o	600-899 min: 10% descuento
+o	900-1,199 min: 15% descuento
+o	Incremento de 5% cada 300 minutos adicionales
+o	Máximo 45% descuento (≥2,700 minutos)
+Postcondiciones:
+•	Se muestran los paquetes con precios calculados
+________________________________________
+RF-01.2: Realizar Compra de Créditos
+Actor: Cliente/Comprador
+Descripción: El sistema debe permitir realizar compras de créditos musicales especificando beneficiarios y distribución.
+Precondiciones:
+•	El cliente debe estar autenticado en el sistema
+Flujo Principal:
+1.	El cliente selecciona cantidad de minutos a comprar (mínimo 30)
+2.	El sistema calcula descuento y monto total
+3.	El cliente registra beneficiarios (máximo 4 incluyéndose): 
+o	Nombre completo
+o	CI/Documento
+o	Teléfono
+o	Email
+4.	El cliente distribuye los minutos entre beneficiarios
+5.	El sistema valida que la suma de distribución = total comprado
+6.	El cliente confirma la compra
+7.	El sistema genera orden de compra con estado "Pendiente"
+Flujos Alternativos:
+•	FA1: Si hay menos de 30 minutos, mostrar error
+•	FA2: Si se registran más de 4 beneficiarios, mostrar error
+•	FA3: Si la distribución no suma el total, mostrar error
+Postcondiciones:
+•	Se crea orden de compra pendiente de pago
+•	No se abonan créditos hasta verificar pago
+________________________________________
+RF-01.3: Solicitar Pago
+Actor: Coordinador Académico
+Descripción: El sistema debe generar solicitud de pago mediante los métodos disponibles.
+Precondiciones:
+•	Debe existir una orden de compra pendiente
+Flujo Principal:
+1.	El coordinador revisa orden de compra
+2.	El coordinador selecciona método de pago: 
+o	Transferencia bancaria (muestra datos bancarios)
+o	Código QR (genera código QR)
+o	Depósito en efectivo (indica caja de recepción)
+3.	El sistema envía instrucciones de pago al cliente
+4.	El sistema actualiza estado a "Pago Solicitado"
+Postcondiciones:
+•	Cliente recibe instrucciones de pago
+•	Orden queda esperando verificación
+________________________________________
+RF-01.4: Verificar y Confirmar Pago
+Actor: Coordinador Académico
+Descripción: El sistema debe permitir verificar pagos recibidos y confirmar la venta.
+Precondiciones:
+•	Orden de compra en estado "Pago Solicitado"
+•	Pago recibido por el cliente
+Flujo Principal:
+1.	El coordinador accede a órdenes pendientes de verificación
+2.	El coordinador verifica evidencia de pago: 
+o	Comprobante de transferencia
+o	Captura de QR pagado
+o	Recibo de depósito
+3.	El coordinador confirma pago en el sistema
+4.	El sistema: 
+o	Actualiza estado a "Pagado y Confirmado"
+o	Abona créditos a cada beneficiario según distribución
+o	Genera comprobante de compra
+o	Envía notificación a cliente y beneficiarios
+Flujos Alternativos:
+•	FA1: Si el pago no coincide, rechazar y notificar cliente
+Postcondiciones:
+•	Créditos disponibles en cuentas de beneficiarios
+•	Comprobante generado
+________________________________________
+RF-02: Gestión de Beneficiarios y Créditos
+RF-02.1: Consultar Saldo de Créditos
+Actor: Estudiante/Beneficiario
+Descripción: El sistema debe permitir consultar el saldo disponible de créditos.
+Precondiciones:
+•	El beneficiario debe estar autenticado
+Flujo Principal:
+1.	El beneficiario accede a su cuenta personal
+2.	El sistema muestra: 
+o	Saldo actual de créditos (en minutos)
+o	Créditos próximos a vencer (si aplica)
+o	Última fecha de actualización
+Postcondiciones:
+•	Se muestra información actualizada de saldo
+________________________________________
+RF-02.2: Consultar Historial de Consumo
+Actor: Estudiante/Beneficiario
+Descripción: El sistema debe mostrar el detalle de créditos consumidos en cada clase.
+Precondiciones:
+•	El beneficiario debe estar autenticado
+Flujo Principal:
+1.	El beneficiario accede a "Historial de Clases"
+2.	El beneficiario puede filtrar por: 
+o	Fecha (rango)
+o	Instructor
+o	Instrumento
+3.	El sistema muestra listado con: 
+o	Fecha y hora de clase
+o	Instructor
+o	Instrumento
+o	Duración real
+o	Créditos consumidos
+o	Saldo después de consumo
+Postcondiciones:
+•	Se muestra historial detallado
+________________________________________
+RF-02.3: Transferir Créditos Entre Beneficiarios
+Actor: Cliente/Comprador, Estudiante/Beneficiario
+Descripción: El sistema debe permitir transferir créditos entre beneficiarios autorizados.
+Precondiciones:
+•	Ambos beneficiarios deben pertenecer a la misma compra original
+•	El beneficiario origen debe tener créditos suficientes
+Flujo Principal:
+1.	El beneficiario solicita transferencia
+2.	El beneficiario selecciona: 
+o	Beneficiario destino (de la lista autorizada)
+o	Cantidad de minutos a transferir
+3.	El sistema valida: 
+o	Saldo suficiente
+o	Beneficiario destino autorizado
+4.	El sistema registra la transferencia
+5.	El sistema actualiza saldos de ambos beneficiarios
+Flujos Alternativos:
+•	FA1: Si no hay saldo suficiente, mostrar error
+•	FA2: Si el destino no está autorizado, mostrar error
+Postcondiciones:
+•	Créditos transferidos
+•	Saldos actualizados
+________________________________________
+RF-03: Gestión de Agendamiento de Clases
+RF-03.1: Agendar Clase
+Actor: Estudiante/Beneficiario
+Descripción: El sistema debe permitir agendar clases especificando todos los parámetros necesarios.
+Precondiciones:
+•	El beneficiario debe tener créditos disponibles
+•	El beneficiario debe estar autenticado
+Flujo Principal:
+1.	El beneficiario accede a "Agendar Clase"
+2.	El beneficiario especifica: 
+o	Fecha y hora preferida
+o	Instrumento a estudiar
+o	Instructor deseado (opcional)
+o	Duración estimada (30, 45, 60, 90 o 120 min)
+o	Modalidad (Individual, Dúo, Grupal)
+3.	El sistema calcula créditos estimados a consumir:
+   Créditos = Duración × Factor_Instrumento × Factor_Modalidad × Factor_Instructor
+4.	El sistema verifica saldo suficiente
+5.	El sistema registra solicitud con estado "Pendiente de Confirmación"
+6.	El sistema notifica al coordinador académico
+Flujos Alternativos:
+•	FA1: Si no hay créditos suficientes, mostrar error y sugerir compra
+•	FA2: Si duración no válida, mostrar opciones correctas
+Postcondiciones:
+•	Solicitud de agendamiento creada
+•	Pendiente de confirmación del coordinador
+________________________________________
+RF-03.2: Confirmar Disponibilidad y Asignar Instructor
+Actor: Coordinador Académico
+Descripción: El sistema debe permitir confirmar la disponibilidad y asignar instructor a clases solicitadas.
+Precondiciones:
+•	Debe existir solicitud de agendamiento pendiente
+Flujo Principal:
+1.	El coordinador accede a "Solicitudes Pendientes"
+2.	El coordinador revisa: 
+o	Fecha y hora solicitada
+o	Instructor preferido
+o	Disponibilidad en calendario
+3.	El coordinador: 
+o	Confirma instructor solicitado, o
+o	Asigna instructor alternativo disponible
+4.	El coordinador confirma el agendamiento
+5.	El sistema: 
+o	Actualiza estado a "Confirmada"
+o	Bloquea horario en calendario
+o	Notifica al beneficiario y al instructor
+Flujos Alternativos:
+•	FA1: Si no hay disponibilidad, coordinador propone fecha alternativa
+•	FA2: Beneficiario puede aceptar o rechazar alternativa
+Postcondiciones:
+•	Clase confirmada en calendario
+•	Instructor asignado
+•	Horario bloqueado
+________________________________________
+RF-04: Gestión de Clases y Consumo de Créditos
+RF-04.1: Registrar Inicio de Clase
+Actor: Instructor
+Descripción: El sistema debe permitir registrar el inicio de una clase y verificar créditos disponibles.
+Precondiciones:
+•	Debe existir clase confirmada en calendario
+•	El instructor debe estar autenticado
+Flujo Principal:
+1.	El instructor accede a "Clases del Día"
+2.	El instructor selecciona la clase a iniciar
+3.	El sistema muestra: 
+o	Datos del beneficiario
+o	Saldo de créditos disponibles
+o	Créditos estimados para esta clase
+4.	El sistema verifica saldo suficiente
+5.	El instructor confirma inicio de clase
+6.	El sistema registra hora de inicio
+Flujos Alternativos:
+•	FA1: Si no hay créditos suficientes: 
+o	Mostrar alerta al instructor
+o	No permitir iniciar clase
+o	Sugerir al estudiante comprar más créditos
+Postcondiciones:
+•	Clase en estado "En Progreso"
+•	Hora de inicio registrada
+________________________________________
+RF-04.2: Finalizar Clase y Consumir Créditos
+Actor: Instructor
+Descripción: El sistema debe registrar la finalización de la clase y consumir los créditos correspondientes.
+Precondiciones:
+•	Clase debe estar en estado "En Progreso"
+Flujo Principal:
+1.	El instructor finaliza la clase
+2.	El instructor confirma duración real de la clase
+3.	El sistema calcula créditos a consumir:
+   Consumo = Duración_Real × Factor_Instrumento × Factor_Modalidad × Factor_Instructor
+   
+   Donde:
+   - Factor_Instrumento: 
+     * Básico/Intermedio: 1.0
+     * Avanzado: 1.15
+     * Especializado: 1.25
+   
+   - Factor_Modalidad:
+     * Individual: 1.0
+     * Dúo: 0.75
+     * Grupal: 0.60
+   
+   - Factor_Instructor:
+     * Regular: 1.0
+     * Premium: 1.2
+     * Invitado: Variable
+4.	El sistema registra: 
+o	Hora de finalización
+o	Duración real
+o	Créditos consumidos
+5.	El sistema actualiza saldo del beneficiario
+6.	El sistema cambia estado a "Realizada"
+7.	El sistema genera registro en historial
+Postcondiciones:
+•	Créditos consumidos
+•	Saldo actualizado
+•	Clase finalizada en historial
+________________________________________
+RF-05: Catálogo y Configuración
+RF-05.1: Gestionar Instrumentos
+Actor: Administrador del Sistema
+Descripción: El sistema debe permitir gestionar el catálogo de instrumentos musicales con sus categorías y factores de costo.
+Precondiciones:
+•	El administrador debe estar autenticado
+Flujo Principal:
+1.	El administrador accede a "Catálogo de Instrumentos"
+2.	El administrador puede: 
+o	Agregar nuevo instrumento
+o	Editar instrumento existente
+o	Desactivar instrumento
+3.	Para cada instrumento se registra: 
+o	Nombre
+o	Categoría (Básico/Intermedio/Avanzado/Especializado)
+o	Factor de costo (1.0, 1.0, 1.15, 1.25)
+o	Estado (Activo/Inactivo)
+Postcondiciones:
+•	Catálogo actualizado
+•	Cambios reflejados en cálculos de consumo
+________________________________________
+RF-05.2: Gestionar Instructores
+Actor: Administrador del Sistema
+Descripción: El sistema debe permitir gestionar la información de instructores y sus categorías.
+Precondiciones:
+•	El administrador debe estar autenticado
+Flujo Principal:
+1.	El administrador accede a "Gestión de Instructores"
+2.	El administrador puede: 
+o	Registrar nuevo instructor
+o	Editar datos de instructor
+o	Cambiar categoría de instructor
+o	Desactivar instructor
+3.	Para cada instructor se registra: 
+o	Datos personales (nombre, CI, teléfono, email)
+o	Especialidad(es)
+o	Categoría (Regular/Premium/Invitado)
+o	Factor de costo (1.0, 1.2, variable)
+o	Horarios disponibles
+o	Estado (Activo/Inactivo)
+Postcondiciones:
+•	Información de instructores actualizada
+•	Disponible para asignación de clases
+________________________________________
+RF-06: Reportes y Consultas
+RF-06.1: Generar Reporte de Ventas
+Actor: Administrador del Sistema
+Descripción: El sistema debe generar reportes de ventas por período.
+Precondiciones:
+•	El administrador debe estar autenticado
+Flujo Principal:
+1.	El administrador accede a "Reportes de Ventas"
+2.	El administrador especifica: 
+o	Rango de fechas
+o	Filtros opcionales (método de pago, rango de montos)
+3.	El sistema genera reporte mostrando: 
+o	Total de ventas
+o	Cantidad de compras
+o	Minutos vendidos
+o	Descuentos aplicados
+o	Monto total recaudado
+o	Distribución por método de pago
+o	Paquetes más vendidos
+Postcondiciones:
+•	Reporte generado y exportable (PDF/Excel)
+________________________________________
+RF-06.2: Generar Reporte de Consumo
+Actor: Administrador del Sistema
+Descripción: El sistema debe generar reportes de consumo de créditos.
+Precondiciones:
+•	El administrador debe estar autenticado
+Flujo Principal:
+1.	El administrador accede a "Reportes de Consumo"
+2.	El administrador especifica: 
+o	Rango de fechas
+o	Filtros opcionales (instructor, instrumento, modalidad)
+3.	El sistema genera reporte mostrando: 
+o	Total de clases impartidas
+o	Créditos consumidos
+o	Distribución por instructor
+o	Distribución por instrumento
+o	Distribución por modalidad
+o	Horarios más solicitados
+Postcondiciones:
+•	Reporte generado y exportable
+________________________________________
+3. REQUERIMIENTOS NO FUNCIONALES
+RNF-01: Seguridad
+•	El sistema debe autenticar usuarios mediante credenciales seguras
+•	Las contraseñas deben estar encriptadas
+•	Cada actor solo puede acceder a funciones autorizadas
+RNF-02: Disponibilidad
+•	El sistema debe estar disponible 24/7 para consultas y agendamiento
+•	El tiempo de inactividad no debe exceder 1% mensual
+RNF-03: Performance
+•	Las consultas de saldo deben responder en menos de 2 segundos
+•	El cálculo de descuentos debe ser instantáneo
+•	La carga de historial debe completarse en menos de 5 segundos
+RNF-04: Usabilidad
+•	Interfaz intuitiva para usuarios no técnicos
+•	Mensajes de error claros y orientados a solución
+•	Confirmaciones antes de acciones irreversibles
+RNF-05: Escalabilidad
+•	El sistema debe soportar al menos 1,000 estudiantes activos
+•	Debe permitir crecimiento sin rediseño de arquitectura
+RNF-06: Integridad de Datos
+•	No se permite saldo negativo de créditos
+•	Todas las transacciones deben ser atómicas
+•	Backup diario automático de base de datos
+RNF-07: Trazabilidad
+•	Todo movimiento de créditos debe quedar registrado
+•	Auditoría completa de compras y consumos
+•	No se permiten eliminaciones, solo anulaciones con registro
+________________________________________
+4. MATRIZ DE TRAZABILIDAD
+Requerimiento	Actor Principal	Actor Secundario	Prioridad
+RF-01.1	Cliente	-	Alta
+RF-01.2	Cliente	-	Alta
+RF-01.3	Coordinador	Cliente	Alta
+RF-01.4	Coordinador	-	Alta
+RF-02.1	Beneficiario	-	Alta
+RF-02.2	Beneficiario	-	Media
+RF-02.3	Beneficiario	Cliente	Media
+RF-03.1	Beneficiario	-	Alta
+RF-03.2	Coordinador	Instructor	Alta
+RF-04.1	Instructor	-	Alta
+RF-04.2	Instructor	-	Alta
+RF-05.1	Administrador	-	Media
+RF-05.2	Administrador	-	Media
+RF-06.1	Administrador	-	Baja
+RF-06.2	Administrador	-	Baja
+

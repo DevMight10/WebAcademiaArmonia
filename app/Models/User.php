@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -44,5 +45,74 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the role of the user.
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Get the cliente profile if user is a cliente.
+     */
+    public function cliente()
+    {
+        return $this->hasOne(Cliente::class);
+    }
+
+    /**
+     * Get the beneficiario profile if user is a beneficiario.
+     */
+    public function beneficiario()
+    {
+        return $this->hasOne(Beneficiario::class);
+    }
+
+    /**
+     * Check if user has a specific role.
+     */
+    public function hasRole(string $roleSlug): bool
+    {
+        // TODO: Implement role checking logic
+        return false;
+    }
+
+    /**
+     * Check if user is an administrador.
+     */
+    public function isAdministrador(): bool
+    {
+        // TODO: Implement logic
+        return false;
+    }
+
+    /**
+     * Check if user is a coordinador.
+     */
+    public function isCoordinador(): bool
+    {
+        // TODO: Implement logic
+        return false;
+    }
+
+    /**
+     * Check if user is a cliente.
+     */
+    public function isCliente(): bool
+    {
+        // TODO: Implement logic
+        return false;
+    }
+
+    /**
+     * Check if user is an estudiante/beneficiario.
+     */
+    public function isEstudiante(): bool
+    {
+        // TODO: Implement logic
+        return false;
     }
 }
