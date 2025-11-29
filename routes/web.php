@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
-// Ruta raíz redirige al login
+// Ruta raíz muestra la página de bienvenida
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 // ============================================
