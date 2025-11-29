@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(find:*)",
+      "Bash(/c/laragon/bin/php/php-8.3.26-Win32-vs16-x64/php.exe artisan db:seed --class=InstructorSeeder)"
     ],
     "deny": [],
     "ask": []

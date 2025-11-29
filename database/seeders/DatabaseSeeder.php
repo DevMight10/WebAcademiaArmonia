@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,          // Primero los roles
             UserSeeder::class,          // Luego los usuarios
             InstrumentoSeeder::class,   // Catálogo de instrumentos
+            InstructorSeeder::class,    // Instructores con especialidades
         ]);
     }
 }

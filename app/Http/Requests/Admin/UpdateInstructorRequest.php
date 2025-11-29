@@ -20,15 +20,17 @@ class UpdateInstructorRequest extends FormRequest
      */
     public function rules(): array
     {
+        $instructor = $this->route('instructore'); // Laravel pluraliza 'instructor' a 'instructore' en rutas resource
+        $userId = $instructor ? $instructor->user_id : null;
+
         return [
             'nombre' => ['required', 'string', 'max:255'],
             'apellido' => ['required', 'string', 'max:255'],
-            'ci' => ['required', 'string', 'max:20', Rule::unique('instructores')->ignore($this->route('instructor'))],
-            'telefono' => ['required', 'string', 'max:20'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('instructores')->ignore($this->route('instructor'))],
+            'ci' => ['required', 'string', 'max:20', Rule::unique('instructores')->ignore($instructor)],
+            'telefono' => ['nullable', 'string', 'max:20'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($userId)],
             'categoria' => ['required', 'in:regular,premium,invitado'],
-            'factor_costo' => ['required', 'numeric', 'min:1'],
-            'especialidades' => ['array'],
+            'especialidades' => ['nullable', 'array'],
             'especialidades.*' => ['exists:instrumentos,id'],
             'estado' => ['boolean'],
         ];
