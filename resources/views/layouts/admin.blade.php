@@ -20,7 +20,6 @@
                     </svg>
                     Instrumentos
                 </a>
-                {{-- TODO: Descomentar cuando se implemente el CRUD de Instructores
                 <a href="{{ route('admin.instructores.index') }}"
                    class="flex items-center px-4 py-2 rounded-lg {{ request()->routeIs('admin.instructores.*') ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'hover:bg-indigo-50 text-gray-700 hover:text-indigo-600' }}">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,7 +27,6 @@
                     </svg>
                     Instructores
                 </a>
-                --}}
             </nav>
         </aside>
 

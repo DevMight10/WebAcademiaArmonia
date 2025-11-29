@@ -67,7 +67,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('instrumentos/{instrumento}/restore', [InstrumentoController::class, 'restore'])
             ->name('instrumentos.restore');
 
-        // TODO: Agregar rutas de instructores
+        // Gestión de Instructores
+        Route::resource('instructores', \App\Http\Controllers\Admin\InstructorController::class);
+        Route::post('instructores/{instructore}/restore', [\App\Http\Controllers\Admin\InstructorController::class, 'restore'])
+            ->name('instructores.restore');
     });
 
     // ============================================
