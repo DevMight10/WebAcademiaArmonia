@@ -37,6 +37,8 @@
                         value="{{ old('name') }}"
                         required
                         autofocus
+                        pattern="[\p{L}\s\-]+"
+                        title="El nombre solo debe contener letras y espacios."
                         autocomplete="name"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('name') border-red-300 @enderror"
                         placeholder="Juan Pérez"
@@ -74,12 +76,16 @@
                         </label>
                         <input
                             type="text"
+                            inputmode="text"
+                            pattern="\d{1,8}(SC|LP|CB|OR|PT|TJ|BE|PD|CH)"
+                            title="Ej: 12345678SC. Hasta 8 dígitos y 2 letras de extensión departamental."
+                            maxlength="10"
                             id="ci"
                             name="ci"
                             value="{{ old('ci') }}"
                             required
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('ci') border-red-300 @enderror"
-                            placeholder="1234567"
+                            placeholder="12345678SC"
                         >
                         @error('ci')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -92,7 +98,12 @@
                             Teléfono <span class="text-red-500">*</span>
                         </label>
                         <input
-                            type="tel"
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            title="Este campo solo debe contener números."
+                            maxlength="8"
+                            minlength="8"
                             id="telefono"
                             name="telefono"
                             value="{{ old('telefono') }}"

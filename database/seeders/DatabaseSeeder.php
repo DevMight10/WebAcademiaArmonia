@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             ClienteSeeder::class,       // Clientes vinculados a usuarios
             BeneficiarioSeeder::class,  // Beneficiarios vinculados a clientes
             InstrumentoSeeder::class,   // Catálogo de instrumentos
+            InstructorSeeder::class,    // Instructores con especialidades
         ]);
 
     }

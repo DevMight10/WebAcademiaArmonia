@@ -15,9 +15,15 @@ class InstrumentoSeeder extends Seeder
     public function run(): void
     {
         $instrumentos = [
-            // BÁSICOS - Factor 1.0
+            // BÁSICOS (Factor: 1.0)
             [
-                'nombre' => 'Guitarra',
+                'nombre' => 'Guitarra Acústica',
+                'categoria' => CategoriaInstrumento::BASICO->value,
+                'factor_costo' => CategoriaInstrumento::BASICO->factorCosto(),
+                'estado' => true,
+            ],
+            [
+                'nombre' => 'Guitarra Eléctrica',
                 'categoria' => CategoriaInstrumento::BASICO->value,
                 'factor_costo' => CategoriaInstrumento::BASICO->factorCosto(),
                 'estado' => true,
@@ -28,8 +34,14 @@ class InstrumentoSeeder extends Seeder
                 'factor_costo' => CategoriaInstrumento::BASICO->factorCosto(),
                 'estado' => true,
             ],
+            [
+                'nombre' => 'Bajo Eléctrico',
+                'categoria' => CategoriaInstrumento::BASICO->value,
+                'factor_costo' => CategoriaInstrumento::BASICO->factorCosto(),
+                'estado' => true,
+            ],
 
-            // INTERMEDIOS - Factor 1.0
+            // INTERMEDIOS (Factor: 1.0)
             [
                 'nombre' => 'Piano',
                 'categoria' => CategoriaInstrumento::INTERMEDIO->value,
@@ -43,7 +55,13 @@ class InstrumentoSeeder extends Seeder
                 'estado' => true,
             ],
             [
-                'nombre' => 'Flauta',
+                'nombre' => 'Flauta Traversa',
+                'categoria' => CategoriaInstrumento::INTERMEDIO->value,
+                'factor_costo' => CategoriaInstrumento::INTERMEDIO->factorCosto(),
+                'estado' => true,
+            ],
+            [
+                'nombre' => 'Clarinete',
                 'categoria' => CategoriaInstrumento::INTERMEDIO->value,
                 'factor_costo' => CategoriaInstrumento::INTERMEDIO->factorCosto(),
                 'estado' => true,
@@ -55,7 +73,7 @@ class InstrumentoSeeder extends Seeder
                 'estado' => true,
             ],
 
-            // AVANZADOS - Factor 1.15 (+15%)
+            // AVANZADOS (Factor: 1.15)
             [
                 'nombre' => 'Saxofón',
                 'categoria' => CategoriaInstrumento::AVANZADO->value,
@@ -75,13 +93,19 @@ class InstrumentoSeeder extends Seeder
                 'estado' => true,
             ],
             [
-                'nombre' => 'Bajo Eléctrico',
+                'nombre' => 'Oboe',
+                'categoria' => CategoriaInstrumento::AVANZADO->value,
+                'factor_costo' => CategoriaInstrumento::AVANZADO->factorCosto(),
+                'estado' => true,
+            ],
+            [
+                'nombre' => 'Percusión',
                 'categoria' => CategoriaInstrumento::AVANZADO->value,
                 'factor_costo' => CategoriaInstrumento::AVANZADO->factorCosto(),
                 'estado' => true,
             ],
 
-            // ESPECIALIZADOS - Factor 1.25 (+25%)
+            // ESPECIALIZADOS (Factor: 1.25)
             [
                 'nombre' => 'Arpa',
                 'categoria' => CategoriaInstrumento::ESPECIALIZADO->value,
@@ -101,44 +125,27 @@ class InstrumentoSeeder extends Seeder
                 'estado' => true,
             ],
             [
-                'nombre' => 'Oboe',
+                'nombre' => 'Trombón',
                 'categoria' => CategoriaInstrumento::ESPECIALIZADO->value,
                 'factor_costo' => CategoriaInstrumento::ESPECIALIZADO->factorCosto(),
                 'estado' => true,
             ],
             [
-                'nombre' => 'Clarinete',
+                'nombre' => 'Fagot',
                 'categoria' => CategoriaInstrumento::ESPECIALIZADO->value,
                 'factor_costo' => CategoriaInstrumento::ESPECIALIZADO->factorCosto(),
                 'estado' => true,
             ],
-
-            // Instrumentos adicionales populares
             [
-                'nombre' => 'Charango',
-                'categoria' => CategoriaInstrumento::BASICO->value,
-                'factor_costo' => CategoriaInstrumento::BASICO->factorCosto(),
-                'estado' => true,
-            ],
-            [
-                'nombre' => 'Zampoña',
-                'categoria' => CategoriaInstrumento::INTERMEDIO->value,
-                'factor_costo' => CategoriaInstrumento::INTERMEDIO->factorCosto(),
-                'estado' => true,
-            ],
-            [
-                'nombre' => 'Quena',
-                'categoria' => CategoriaInstrumento::INTERMEDIO->value,
-                'factor_costo' => CategoriaInstrumento::INTERMEDIO->factorCosto(),
+                'nombre' => 'Contrabajo',
+                'categoria' => CategoriaInstrumento::ESPECIALIZADO->value,
+                'factor_costo' => CategoriaInstrumento::ESPECIALIZADO->factorCosto(),
                 'estado' => true,
             ],
         ];
 
         foreach ($instrumentos as $instrumento) {
-            Instrumento::firstOrCreate(
-                ['nombre' => $instrumento['nombre']], // Buscar por nombre
-                $instrumento // Crear con todos los datos si no existe
-            );
+            Instrumento::create($instrumento);
         }
     }
 }

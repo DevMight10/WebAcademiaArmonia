@@ -13,6 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Registrar middleware personalizado para verificación de roles
         $middleware->alias([
+            'admin' => \App\Http\Middleware\CheckAdministrador::class,
+            'coordinador' => \App\Http\Middleware\CheckCoordinador::class,
+            'cliente' => \App\Http\Middleware\CheckCliente::class,
+            'estudiante' => \App\Http\Middleware\CheckEstudiante::class,
             'role' => \App\Http\Middleware\CheckRole::class,
         ]);
     })
