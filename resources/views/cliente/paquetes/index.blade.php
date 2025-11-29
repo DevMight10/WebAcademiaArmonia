@@ -2,235 +2,146 @@
 
 @section('title', 'Paquetes de Créditos')
 
-@push('styles')
-<style>
-    .package-card {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .package-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 5px;
-        background: linear-gradient(90deg, #6366f1, #8b5cf6);
-    }
-
-    .popular-badge {
-        position: absolute;
-        top: 20px;
-        right: -35px;
-        background: #f59e0b;
-        color: white;
-        padding: 5px 40px;
-        transform: rotate(45deg);
-        font-size: 0.75rem;
-        font-weight: 700;
-        box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
-    }
-
-    .price-original {
-        text-decoration: line-through;
-        color: #9ca3af;
-        font-size: 1rem;
-    }
-
-    .price-final {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #6366f1;
-    }
-
-    .discount-badge {
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 50px;
-        font-weight: 700;
-        display: inline-block;
-        margin: 0.5rem 0;
-    }
-
-    .feature-list {
-        list-style: none;
-        padding: 0;
-    }
-
-    .feature-list li {
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .feature-list li:last-child {
-        border-bottom: none;
-    }
-
-    .feature-list i {
-        color: #10b981;
-        margin-right: 0.5rem;
-    }
-</style>
-@endpush
-
-@section('content')
-<div class="row mb-4">
-    <div class="col-12 text-center text-white">
-        <h1 class="display-4 fw-bold mb-2">
-            <i class="bi bi-music-note-list"></i> Paquetes de Créditos Musicales
-        </h1>
-        <p class="lead">Compra créditos y aprende a tu ritmo. Cuanto más compras, más ahorras!</p>
-    </div>
+@section('cliente-content')
+{{-- Encabezado de la página --}}
+<div class="text-center mb-16">
+    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+        Paquetes de Créditos Musicales
+    </h2>
+    <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Invierte en tu educación musical con descuentos progresivos.
+        <strong class="text-indigo-600">Cuanto más compras, más ahorras.</strong>
+    </p>
 </div>
 
-<!-- Paquetes Predefinidos -->
-<div class="row g-4 mb-5">
-    @foreach($paquetes as $index => $paquete)
-        <div class="col-lg-4 col-md-6">
-            <div class="card package-card h-100">
-                @if($paquete['minutos'] == 1500)
-                    <span class="popular-badge">POPULAR</span>
-                @endif
+{{-- Grid de Paquetes Predefinidos --}}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    @foreach($paquetes as $paquete)
+        @php
+            $isPremium = $paquete['minutos'] == 2700;
+        @endphp
+        <div class="relative bg-white rounded-lg shadow-md border {{ $isPremium ? 'border-indigo-500' : 'border-gray-200' }} p-8 flex flex-col">
+            @if($isPremium)
+                <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
+                    <span class="px-4 py-1 bg-indigo-600 text-white text-sm font-semibold rounded-full shadow-md">
+                        Mejor Valor
+                    </span>
+                </div>
+            @endif
 
-                <div class="card-body d-flex flex-column">
-                    <!-- Nombre del Paquete -->
-                    <div class="text-center mb-3">
-                        <h3 class="card-title fw-bold text-uppercase">
-                            {{ App\Services\PrecioService::obtenerNombrePaquete($paquete['minutos']) }}
-                        </h3>
-                        <p class="text-muted mb-1">
-                            <i class="bi bi-clock"></i> {{ $paquete['minutos'] }} minutos
-                            <small>({{ number_format($paquete['horas'], 1) }} horas)</small>
-                        </p>
-                    </div>
+            <h3 class="text-2xl font-bold text-gray-900">
+                {{ App\Services\PrecioService::obtenerNombrePaquete($paquete['minutos']) }}
+            </h3>
+            <p class="text-gray-600 mt-1">{{ $paquete['minutos'] }} minutos ({{ number_format($paquete['horas'], 0) }} horas)</p>
 
-                    <!-- Descuento -->
+            <div class="my-6">
+                <div class="flex items-baseline">
+                    <span class="text-4xl font-extrabold text-gray-900">{{ number_format($paquete['total'], 0) }}</span>
+                    <span class="text-xl text-gray-600 ml-2">Bs</span>
+                </div>
+                <div class="flex items-center space-x-2 mt-1">
+                    <span class="text-sm line-through text-gray-400">{{ number_format($paquete['subtotal'], 0) }} Bs</span>
                     @if($paquete['porcentaje_descuento'] > 0)
-                        <div class="text-center">
-                            <span class="discount-badge">
-                                <i class="bi bi-tag-fill"></i> {{ $paquete['porcentaje_descuento'] }}% Descuento
-                            </span>
-                        </div>
+                        <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-md text-xs font-bold">AHORRA {{ $paquete['porcentaje_descuento'] }}%</span>
                     @endif
-
-                    <!-- Precios -->
-                    <div class="text-center my-4">
-                        @if($paquete['porcentaje_descuento'] > 0)
-                            <div class="price-original">
-                                {{ number_format($paquete['subtotal'], 2) }} Bs
-                            </div>
-                        @endif
-                        <div class="price-final">
-                            {{ number_format($paquete['total'], 2) }} <small class="fs-5">Bs</small>
-                        </div>
-                        @if($paquete['porcentaje_descuento'] > 0)
-                            <div class="text-success fw-bold">
-                                Ahorras: {{ number_format($paquete['ahorro'], 2) }} Bs
-                            </div>
-                        @endif
-                    </div>
-
-                    <!-- Características -->
-                    <ul class="feature-list mb-4 flex-grow-1">
-                        <li>
-                            <i class="bi bi-check-circle-fill"></i>
-                            <strong>{{ $paquete['minutos'] }}</strong> minutos de clase
-                        </li>
-                        <li>
-                            <i class="bi bi-check-circle-fill"></i>
-                            Precio: <strong>{{ number_format($paquete['total'] / $paquete['minutos'], 2) }} Bs/min</strong>
-                        </li>
-                        <li>
-                            <i class="bi bi-check-circle-fill"></i>
-                            Distribuye entre <strong>hasta 4 beneficiarios</strong>
-                        </li>
-                        <li>
-                            <i class="bi bi-check-circle-fill"></i>
-                            Sin fecha de expiración
-                        </li>
-                        <li>
-                            <i class="bi bi-check-circle-fill"></i>
-                            Todos los instrumentos disponibles
-                        </li>
-                    </ul>
-
-                    <!-- Botón de Compra -->
-                    <div class="text-center mt-auto">
-                        <a href="{{ route('cliente.compras.create', ['minutos' => $paquete['minutos']]) }}"
-                           class="btn btn-primary btn-lg w-100">
-                            <i class="bi bi-cart-plus"></i> Comprar Ahora
-                        </a>
-                    </div>
                 </div>
             </div>
+
+            <ul class="space-y-3 text-gray-600 mb-8">
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    <span>Clases personalizadas</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    <span>Hasta 4 beneficiarios</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    <span>Sin fecha de caducidad</span>
+                </li>
+            </ul>
+            <a href="{{ route('cliente.compras.create', ['minutos' => $paquete['minutos']]) }}"
+               class="mt-auto block w-full text-center {{ $isPremium ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-800 hover:bg-gray-900' }} text-white font-bold py-3 rounded-lg transition">
+                Comprar Ahora
+            </a>
         </div>
     @endforeach
 </div>
 
-<!-- Sección de Compra Personalizada -->
-<div class="row">
-    <div class="col-lg-8 mx-auto">
-        <div class="card">
-            <div class="card-body p-4">
-                <h3 class="card-title text-center mb-4">
-                    <i class="bi bi-pencil-square"></i> Paquete Personalizado
-                </h3>
-                <p class="text-center text-muted mb-4">
-                    ¿Necesitas una cantidad específica? Calcula tu paquete personalizado (mínimo 30 minutos)
-                </p>
+{{-- Sección de Paquete Personalizado --}}
+<div class="mt-16 max-w-3xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md border border-gray-200 p-8">
+        <h3 class="text-2xl font-bold text-gray-900 mb-2 text-center">Paquete Personalizado</h3>
+        <p class="text-gray-600 mb-6 text-center">
+            ¿Necesitas una cantidad específica? Calcula tu paquete personalizado (mínimo 30 minutos)
+        </p>
 
-                <form id="calcularForm">
-                    <div class="row g-3 align-items-end">
-                        <div class="col-md-6">
-                            <label for="minutos_personalizados" class="form-label">Cantidad de Minutos</label>
-                            <input type="number"
-                                   class="form-control form-control-lg"
-                                   id="minutos_personalizados"
-                                   min="30"
-                                   step="10"
-                                   placeholder="Ej: 450">
-                        </div>
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary btn-lg w-100">
-                                <i class="bi bi-calculator"></i> Calcular Precio
-                            </button>
-                        </div>
-                    </div>
-                </form>
+        <form id="calcularForm" class="space-y-4">
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <label for="minutos_personalizados" class="block text-sm font-medium text-gray-700 mb-2">
+                        Cantidad de Minutos
+                    </label>
+                    <input
+                        type="number"
+                        id="minutos_personalizados"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        min="30"
+                        step="10"
+                        placeholder="Ej: 450">
+                    <small class="text-gray-500 text-xs">Mínimo 30 minutos</small>
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="px-8 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition">
+                        Calcular
+                    </button>
+                </div>
+            </div>
+        </form>
 
-                <!-- Resultado del cálculo -->
-                <div id="resultado" class="mt-4" style="display: none;">
-                    <div class="alert alert-info">
-                        <h5 class="alert-heading">Tu Paquete Personalizado:</h5>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p class="mb-1"><strong>Minutos:</strong> <span id="res_minutos"></span></p>
-                                <p class="mb-1"><strong>Subtotal:</strong> <span id="res_subtotal"></span> Bs</p>
-                                <p class="mb-1"><strong>Descuento:</strong> <span id="res_descuento"></span>%</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="mb-1"><strong>Ahorro:</strong> <span id="res_ahorro"></span> Bs</p>
-                                <p class="mb-1"><strong class="fs-4">Total:</strong> <span id="res_total" class="fs-4 text-primary"></span> Bs</p>
-                            </div>
-                        </div>
-                        <div class="text-center mt-3">
-                            <a href="#" id="btn_comprar_personalizado" class="btn btn-success btn-lg">
-                                <i class="bi bi-cart-check"></i> Comprar Este Paquete
-                            </a>
-                        </div>
+        {{-- Resultado del cálculo --}}
+        <div id="resultado" class="mt-6 hidden">
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <h5 class="text-lg font-bold text-gray-800 mb-4 text-center">Tu Paquete Personalizado</h5>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Minutos:</p>
+                        <p class="text-lg font-bold text-gray-900"><span id="res_minutos"></span> min</p>
                     </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Descuento:</p>
+                        <p class="text-lg font-bold text-emerald-600"><span id="res_descuento"></span>%</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Subtotal:</p>
+                        <p class="text-lg font-bold text-gray-900"><span id="res_subtotal"></span> Bs</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Ahorro:</p>
+                        <p class="text-lg font-bold text-emerald-600"><span id="res_ahorro"></span> Bs</p>
+                    </div>
+                </div>
+                <div class="text-center mb-4 p-4 bg-white rounded-lg border border-gray-200">
+                    <p class="text-sm text-gray-600 mb-1">Total a Pagar</p>
+                    <div class="flex items-baseline justify-center">
+                        <span class="text-4xl font-extrabold text-gray-900" id="res_total"></span>
+                        <span class="text-xl text-gray-600 ml-2">Bs</span>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="#" id="btn_comprar_personalizado" class="inline-block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition">
+                        Comprar Este Paquete
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection
 
 @push('scripts')
 <script>
+// Calculadora de precio personalizado
 document.getElementById('calcularForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
@@ -254,16 +165,19 @@ document.getElementById('calcularForm').addEventListener('submit', async functio
         const data = await response.json();
 
         if (response.ok) {
+            // Actualizar valores en el resultado
             document.getElementById('res_minutos').textContent = data.minutos;
-            document.getElementById('res_subtotal').textContent = data.subtotal.toLocaleString('es-BO', {minimumFractionDigits: 2});
+            document.getElementById('res_subtotal').textContent = data.subtotal.toLocaleString('es-BO', {minimumFractionDigits: 0});
             document.getElementById('res_descuento').textContent = data.porcentaje_descuento;
-            document.getElementById('res_ahorro').textContent = data.monto_descuento.toLocaleString('es-BO', {minimumFractionDigits: 2});
-            document.getElementById('res_total').textContent = data.total.toLocaleString('es-BO', {minimumFractionDigits: 2});
+            document.getElementById('res_ahorro').textContent = data.monto_descuento.toLocaleString('es-BO', {minimumFractionDigits: 0});
+            document.getElementById('res_total').textContent = data.total.toLocaleString('es-BO', {minimumFractionDigits: 0});
 
+            // Actualizar enlace de compra
             const btnComprar = document.getElementById('btn_comprar_personalizado');
             btnComprar.href = '{{ route("cliente.compras.create") }}?minutos=' + data.minutos;
 
-            document.getElementById('resultado').style.display = 'block';
+            // Mostrar resultado
+            document.getElementById('resultado').classList.remove('hidden');
         } else {
             alert('Error al calcular el precio');
         }
@@ -274,3 +188,4 @@ document.getElementById('calcularForm').addEventListener('submit', async functio
 });
 </script>
 @endpush
+@endsection
