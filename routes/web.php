@@ -87,7 +87,7 @@ Route::middleware(['auth'])->group(function () {
     // ============================================
     // RUTAS DE CLIENTE
     // ============================================
-    Route::prefix('cliente')->name('cliente.')->group(function () {
+    Route::middleware(['role:cliente'])->prefix('cliente')->name('cliente.')->group(function () {
         // Dashboard del cliente
         Route::get('/dashboard', function () {
             return view('cliente.dashboard');
@@ -102,6 +102,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/compras/crear', [CompraController::class, 'create'])->name('compras.create');
         Route::post('/compras', [CompraController::class, 'store'])->name('compras.store');
         Route::get('/compras/{id}/confirmacion', [CompraController::class, 'confirmacion'])->name('compras.confirmacion');
+        
+        // Buscar beneficiario por email
+        Route::post('/beneficiarios/buscar', [CompraController::class, 'buscarBeneficiario'])->name('beneficiarios.buscar');
     });
 
     // ============================================

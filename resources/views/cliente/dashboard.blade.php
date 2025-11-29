@@ -76,7 +76,6 @@
                     </svg>
                     Ver Paquetes Disponibles
                 </a>
-                <p class="text-xs text-gray-500 mt-2">RF-01.1, RF-01.2</p>
             </div>
         </div>
 

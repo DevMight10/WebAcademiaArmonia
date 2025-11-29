@@ -7,6 +7,7 @@ use App\Models\Beneficiario;
 use App\Models\Cliente;
 use App\Models\Compra;
 use App\Models\DistribucionCredito;
+use App\Models\User;
 use App\Services\PrecioService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,49 @@ class CompraController extends Controller
     public function create()
     {
         return view('cliente.compras.create');
+    }
+
+    /**
+     * Buscar beneficiario por email
+     * 
+     * Busca un usuario con rol "beneficiario" por su email.
+     * Solo retorna beneficiarios que existen en el sistema.
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function buscarBeneficiario(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        // Buscar usuario con rol beneficiario
+        $user = User::whereHas('role', function ($query) {
+            $query->where('slug', 'beneficiario');
+        })
+        ->where('email', $request->email)
+        ->with('beneficiario')
+        ->first();
+
+        if ($user && $user->beneficiario) {
+            return response()->json([
+                'found' => true,
+                'beneficiario' => [
+                    'user_id' => $user->id,
+                    'beneficiario_id' => $user->beneficiario->id,
+                    'nombre' => $user->name,
+                    'email' => $user->email,
+                    'ci' => $user->beneficiario->ci,
+                    'telefono' => $user->beneficiario->telefono,
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'found' => false,
+            'message' => 'Beneficiario con ese email no existe'
+        ], 404);
     }
 
     /**
@@ -74,8 +118,7 @@ class CompraController extends Controller
         DB::beginTransaction();
         try {
             // Obtener el cliente autenticado
-            // TODO: Cuando esté implementado el perfil de cliente, usar: auth()->user()->cliente
-            $cliente = Cliente::first();
+            $cliente = auth()->user()->cliente;
 
             // Validar que existe un cliente
             if (!$cliente) {
@@ -166,8 +209,7 @@ class CompraController extends Controller
     public function index()
     {
         // Obtener el cliente autenticado
-        // TODO: Cuando esté implementado el perfil, usar: auth()->user()->cliente
-        $cliente = Cliente::first();
+        $cliente = auth()->user()->cliente;
 
         // Validar que existe un cliente
         if (!$cliente) {

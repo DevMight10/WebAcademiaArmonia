@@ -8,6 +8,7 @@
     <title>@yield('title', 'Academia Armonía')</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 <body class="antialiased @guest bg-gray-100 @else bg-gray-50 @endguest">
     <div class="min-h-screen flex flex-col">
@@ -43,5 +44,7 @@
             </div>
         </footer>
     </div>
+    
+    @stack('scripts')
 </body>
 </html>

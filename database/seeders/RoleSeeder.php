@@ -42,7 +42,10 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            Role::create($role);
+            Role::updateOrCreate(
+                ['slug' => $role['slug']], // Buscar por slug
+                $role // Crear con todos los datos si no existe
+            );
         }
     }
 }
