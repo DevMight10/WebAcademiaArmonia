@@ -17,8 +17,9 @@ class DatabaseSeeder extends Seeder
     {
         // Ejecutar seeders en orden de dependencia
         $this->call([
-            RoleSeeder::class,      // Primero los roles
-            UserSeeder::class,      // Luego los usuarios
+            RoleSeeder::class,          // Primero los roles
+            UserSeeder::class,          // Luego los usuarios
+            InstrumentoSeeder::class,   // Catálogo de instrumentos
         ]);
     }
 }

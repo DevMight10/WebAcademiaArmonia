@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Admin\InstrumentoController;
 
 // Ruta raíz muestra la página de bienvenida
 Route::get('/', function () {
@@ -50,12 +51,23 @@ Route::middleware(['auth'])->group(function () {
     // ============================================
     // RUTAS DE ADMINISTRADOR
     // ============================================
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
         Route::get('/dashboard', function () {
-            return view('admin.dashboard');
+            $stats = [
+                'instrumentos' => \App\Models\Instrumento::count(),
+                'instructores' => \App\Models\Instructor::count(),
+                'clientes' => \App\Models\Cliente::count(),
+                'ventas' => \App\Models\Compra::where('estado', 'pagado_y_confirmado')->sum('total') ?? 0,
+            ];
+            return view('admin.dashboard', compact('stats'));
         })->name('dashboard');
 
-        // TODO: Agregar rutas de instrumentos e instructores
+        // Gestión de Instrumentos
+        Route::resource('instrumentos', InstrumentoController::class);
+        Route::post('instrumentos/{instrumento}/restore', [InstrumentoController::class, 'restore'])
+            ->name('instrumentos.restore');
+
+        // TODO: Agregar rutas de instructores
     });
 
     // ============================================

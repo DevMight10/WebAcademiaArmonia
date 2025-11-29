@@ -1,14 +1,13 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Dashboard Administrador')
 
-@section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Dashboard Administrador</h1>
-        <p class="mt-2 text-sm text-gray-600">Bienvenido, {{ auth()->user()->name }}</p>
-    </div>
+@section('admin-content')
+<!-- Header -->
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Dashboard Administrador</h1>
+    <p class="mt-2 text-sm text-gray-600">Bienvenido, {{ auth()->user()->name }}</p>
+</div>
 
     <!-- Estadísticas Rápidas -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -23,7 +22,7 @@
                 <div class="ml-5 w-0 flex-1">
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Instrumentos</dt>
-                        <dd class="text-lg font-semibold text-gray-900">--</dd>
+                        <dd class="text-lg font-semibold text-gray-900">{{ $stats['instrumentos'] }}</dd>
                     </dl>
                 </div>
             </div>
@@ -40,7 +39,7 @@
                 <div class="ml-5 w-0 flex-1">
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Instructores</dt>
-                        <dd class="text-lg font-semibold text-gray-900">--</dd>
+                        <dd class="text-lg font-semibold text-gray-900">{{ $stats['instructores'] }}</dd>
                     </dl>
                 </div>
             </div>
@@ -57,7 +56,7 @@
                 <div class="ml-5 w-0 flex-1">
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Clientes</dt>
-                        <dd class="text-lg font-semibold text-gray-900">--</dd>
+                        <dd class="text-lg font-semibold text-gray-900">{{ $stats['clientes'] }}</dd>
                     </dl>
                 </div>
             </div>
@@ -74,7 +73,7 @@
                 <div class="ml-5 w-0 flex-1">
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Ventas (Bs)</dt>
-                        <dd class="text-lg font-semibold text-gray-900">--</dd>
+                        <dd class="text-lg font-semibold text-gray-900">{{ number_format($stats['ventas'], 2) }}</dd>
                     </dl>
                 </div>
             </div>
@@ -89,7 +88,7 @@
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Gestión de Instrumentos -->
-                <a href="#" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <a href="{{ route('admin.instrumentos.index') }}" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                     <div class="flex items-center">
                         <svg class="h-7 w-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
@@ -129,5 +128,4 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
