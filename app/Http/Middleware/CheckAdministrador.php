@@ -15,7 +15,14 @@ class CheckAdministrador
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // TODO: Verificar si el usuario tiene rol de Administrador
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para acceder a esta página.');
+        }
+
+        if (!auth()->user()->isAdministrador()) {
+            abort(403, 'No tienes permisos para acceder a esta sección.');
+        }
+
         return $next($request);
     }
 }
