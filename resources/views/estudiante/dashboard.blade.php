@@ -11,15 +11,15 @@
     </div>
 
     <!-- Créditos Disponibles (Destacado) -->
-    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-8 mb-8 text-white">
+    <div class="bg-slate-800 rounded-lg shadow-lg p-8 mb-8 text-white">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-indigo-100 text-sm font-medium">Tus Créditos Disponibles</p>
+                <p class="text-slate-300 text-sm font-medium">Tus Créditos Disponibles</p>
                 <p class="text-5xl font-bold mt-2">-- minutos</p>
-                <p class="text-indigo-100 text-sm mt-2">Equivalente a -- clases de 60 minutos</p>
+                <p class="text-slate-300 text-sm mt-2">Equivalente a -- clases de 60 minutos</p>
             </div>
             <div class="hidden md:block">
-                <svg class="h-24 w-24 text-white opacity-50" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="h-24 w-24 text-white opacity-20" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                 </svg>
             </div>
@@ -65,7 +65,7 @@
         <!-- Próxima Clase -->
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
-                <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
                     <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
