@@ -33,7 +33,7 @@
 
     <!-- Filters Card -->
     <div class="bg-white rounded-lg shadow p-6">
-        <form action="{{ route('admin.instrumentos.index') }}" method="GET" class="space-y-4">
+        <form id="form-filtros" action="{{ route('admin.instrumentos.index') }}" method="GET" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Búsqueda -->
                 <div class="md:col-span-2">
@@ -91,7 +91,7 @@
     <div class="bg-white rounded-lg shadow overflow-hidden">
         @if($instrumentos->count() > 0)
             <div class="overflow-x-auto">
-                <table class="w-full">
+                <table id="tabla-instrumentos" class="w-full">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -205,8 +205,8 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
             <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                <span id="paginacion-info" class="text-sm text-gray-600"></span>
                 {{ $instrumentos->links() }}
             </div>
         @else
@@ -229,4 +229,160 @@
         @endif
     </div>
 </div>
+
+{{-- jQuery CDN y JavaScript para AJAX --}}
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Variables para debounce
+    let searchTimeout = null;
+    const DEBOUNCE_DELAY = 300; // ms
+
+    // Función principal para buscar con AJAX
+    function buscarInstrumentos() {
+        const search = $('#search').val();
+        const categoria = $('#categoria').val();
+        const estado = $('#estado').val();
+
+        // Mostrar indicador de carga
+        $('#tabla-instrumentos tbody').html(`
+            <tr>
+                <td colspan="5" class="px-6 py-12 text-center">
+                    <svg class="animate-spin h-8 w-8 mx-auto text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="mt-2 text-gray-500">Buscando...</p>
+                </td>
+            </tr>
+        `);
+
+        // Petición AJAX con jQuery
+        $.ajax({
+            url: '{{ route("admin.instrumentos.index") }}',
+            method: 'GET',
+            data: { search, categoria, estado },
+            dataType: 'json',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                renderizarTabla(response.instrumentos);
+                renderizarPaginacion(response.pagination);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX:', error);
+                $('#tabla-instrumentos tbody').html(`
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-red-600">
+                            Error al cargar los datos. Intenta de nuevo.
+                        </td>
+                    </tr>
+                `);
+            }
+        });
+    }
+
+    // Renderizar tabla con los datos JSON
+    function renderizarTabla(instrumentos) {
+        if (instrumentos.length === 0) {
+            $('#tabla-instrumentos tbody').html(`
+                <tr>
+                    <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                        No se encontraron instrumentos con esos filtros.
+                    </td>
+                </tr>
+            `);
+            return;
+        }
+
+        let html = '';
+        instrumentos.forEach(function(inst) {
+            const badgeColors = {
+                'basico': 'bg-green-100 text-green-800',
+                'intermedio': 'bg-blue-100 text-blue-800',
+                'avanzado': 'bg-yellow-100 text-yellow-800',
+                'especializado': 'bg-purple-100 text-purple-800'
+            };
+            const categoriaLabels = {
+                'basico': 'Básico',
+                'intermedio': 'Intermedio',
+                'avanzado': 'Avanzado',
+                'especializado': 'Especializado'
+            };
+
+            html += `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-indigo-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path>
+                            </svg>
+                            <div class="text-sm font-medium text-gray-900">${inst.nombre}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${badgeColors[inst.categoria] || 'bg-gray-100 text-gray-800'}">
+                            ${categoriaLabels[inst.categoria] || inst.categoria}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${inst.factor_costo}x</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        ${inst.estado ? 
+                            '<span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Activo</span>' :
+                            '<span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inactivo</span>'
+                        }
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div class="flex justify-end gap-2">
+                            <a href="/admin/instrumentos/${inst.id}" class="text-indigo-600 hover:text-indigo-900" title="Ver">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </a>
+                            <a href="/admin/instrumentos/${inst.id}/edit" class="text-yellow-600 hover:text-yellow-900" title="Editar">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        $('#tabla-instrumentos tbody').html(html);
+    }
+
+    // Renderizar información de paginación
+    function renderizarPaginacion(pagination) {
+        $('#paginacion-info').html(`
+            Mostrando <strong>${pagination.total}</strong> instrumentos
+            (Página ${pagination.current_page} de ${pagination.last_page})
+        `);
+    }
+
+    // Event listeners con debounce para búsqueda en tiempo real
+    $('#search').on('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(buscarInstrumentos, DEBOUNCE_DELAY);
+    });
+
+    // Filtros de categoría y estado sin debounce
+    $('#categoria, #estado').on('change', function() {
+        buscarInstrumentos();
+    });
+
+    // Prevenir submit del formulario (ya no necesitamos recargar)
+    $('#form-filtros').on('submit', function(e) {
+        e.preventDefault();
+        buscarInstrumentos();
+    });
+});
+</script>
+@endpush
 @endsection
