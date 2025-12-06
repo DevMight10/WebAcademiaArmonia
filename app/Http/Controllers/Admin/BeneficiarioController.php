@@ -9,11 +9,15 @@ use Illuminate\Http\Request;
 
 class BeneficiarioController extends Controller
 {
+    /**
+     * Listar beneficiarios con búsqueda en tiempo real.
+     * Retorna JSON cuando la petición es AJAX.
+     */
     public function index(Request $request)
     {
         $query = Beneficiario::with('user');
 
-        // Búsqueda
+        // Búsqueda por nombre, email o CI
         if ($request->filled('search')) {
             $search = $request->search;
             $query->whereHas('user', function($q) use ($search) {
@@ -23,6 +27,19 @@ class BeneficiarioController extends Controller
         }
 
         $beneficiarios = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+
+        // Respuesta JSON para peticiones AJAX (búsqueda en tiempo real)
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'beneficiarios' => $beneficiarios->items(),
+                'pagination' => [
+                    'current_page' => $beneficiarios->currentPage(),
+                    'last_page' => $beneficiarios->lastPage(),
+                    'per_page' => $beneficiarios->perPage(),
+                    'total' => $beneficiarios->total(),
+                ],
+            ]);
+        }
 
         return view('admin.beneficiarios.index', compact('beneficiarios'));
     }

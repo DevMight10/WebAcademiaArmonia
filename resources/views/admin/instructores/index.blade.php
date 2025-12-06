@@ -276,4 +276,161 @@
         @endif
     </div>
 </div>
+
+@push('scripts')
+<!-- jQuery CDN -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    let searchTimeout;
+
+    // ========================================
+    // IMPLEMENTACIÓN AJAX CON JQUERY
+    // Búsqueda de instructores en tiempo real
+    // ========================================
+    
+    function buscarInstructores() {
+        const search = $('#search').val();
+        const categoria = $('#categoria').val();
+        const estado = $('#estado').val();
+        const instrumento = $('#instrumento').val();
+
+        // Mostrar indicador de carga
+        $('tbody').html(`
+            <tr>
+                <td colspan="6" class="px-6 py-12 text-center">
+                    <svg class="animate-spin h-8 w-8 mx-auto text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="mt-2 text-gray-500">Buscando...</p>
+                </td>
+            </tr>
+        `);
+
+        $.ajax({
+            url: '{{ route("admin.instructores.index") }}',
+            method: 'GET',
+            data: { search, categoria, estado, instrumento },
+            dataType: 'json',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                renderizarTabla(response.instructores);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX:', error);
+                $('tbody').html(`
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-red-600">
+                            Error al cargar los datos. Intenta de nuevo.
+                        </td>
+                    </tr>
+                `);
+            }
+        });
+    }
+
+    function renderizarTabla(instructores) {
+        if (instructores.length === 0) {
+            $('tbody').html(`
+                <tr>
+                    <td colspan="6" class="px-6 py-12 text-center">
+                        <p class="text-gray-500">No se encontraron instructores</p>
+                    </td>
+                </tr>
+            `);
+            return;
+        }
+
+        let html = '';
+        instructores.forEach(instructor => {
+            const categoriaLabels = {
+                'regular': 'Regular',
+                'premium': 'Premium',
+                'invitado': 'Invitado'
+            };
+            const categoriaColors = {
+                'regular': 'bg-blue-100 text-blue-800',
+                'premium': 'bg-purple-100 text-purple-800',
+                'invitado': 'bg-amber-100 text-amber-800'
+            };
+
+            const especialidades = instructor.especialidades.map(esp => 
+                `<span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">${esp.instrumento.nombre}</span>`
+            ).join(' ');
+
+            html += `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-8 w-8">
+                                <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                                    <span class="text-indigo-600 font-semibold text-xs">
+                                        ${instructor.user.name.substring(0, 2).toUpperCase()}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <div class="text-sm font-medium text-gray-900">${instructor.user.name}</div>
+                                <div class="text-xs text-gray-500 truncate max-w-[150px]">${instructor.user.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${categoriaColors[instructor.categoria]}">
+                            ${categoriaLabels[instructor.categoria]}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-wrap gap-1">
+                            ${especialidades || '<span class="text-xs text-gray-400 italic">Sin especialidades</span>'}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${parseFloat(instructor.factor_costo).toFixed(2)}x
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        ${instructor.estado 
+                            ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Activo</span>'
+                            : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inactivo</span>'
+                        }
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div class="flex justify-end gap-2">
+                            <a href="/admin/instructores/${instructor.id}" class="text-indigo-600 hover:text-indigo-900" title="Ver detalles">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </a>
+                            <a href="/admin/instructores/${instructor.id}/edit" class="text-blue-600 hover:text-blue-900" title="Editar">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        $('tbody').html(html);
+    }
+
+    // Event listeners
+    $('#search').on('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(buscarInstructores, 300); // Debounce 300ms
+    });
+
+    $('#categoria, #estado, #instrumento').on('change', function() {
+        buscarInstructores();
+    });
+});
+</script>
+@endpush
+
 @endsection

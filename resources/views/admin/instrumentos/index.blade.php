@@ -258,7 +258,10 @@ $(document).ready(function() {
             </tr>
         `);
 
-        // Petición AJAX con jQuery
+        // ========================================
+        // IMPLEMENTACIÓN AJAX CON JQUERY
+        // Búsqueda en tiempo real sin recargar página
+        // ========================================
         $.ajax({
             url: '{{ route("admin.instrumentos.index") }}',
             method: 'GET',

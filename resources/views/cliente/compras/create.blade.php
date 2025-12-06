@@ -372,6 +372,10 @@ document.getElementById('minutos_totales').addEventListener('input', async funct
         try {
             precioPreview.innerHTML = '<p class="text-center text-gray-600">Calculando precio...</p>';
             
+            // ========================================
+            // IMPLEMENTACIÓN AJAX CON FETCH API
+            // Cálculo de precio en tiempo real (JSON)
+            // ========================================
             const response = await fetch('{{ route("cliente.paquetes.calcular") }}', {
                 method: 'POST',
                 headers: {
@@ -451,6 +455,10 @@ async function buscarBeneficiario() {
     }
 
     try {
+        // ========================================
+        // IMPLEMENTACIÓN AJAX CON FETCH API
+        // Búsqueda de beneficiarios por email (JSON)
+        // ========================================
         const response = await fetch('{{ route("cliente.beneficiarios.buscar") }}', {
             method: 'POST',
             headers: {

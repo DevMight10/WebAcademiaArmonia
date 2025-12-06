@@ -160,4 +160,76 @@
         @endif
     </div>
 </div>
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function() {
+    let searchTimeout;
+
+    // ========================================
+    // IMPLEMENTACIÓN AJAX CON JQUERY
+    // Búsqueda de beneficiarios en tiempo real
+    // ========================================
+    
+    $('#search').on('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+            const search = $('#search').val();
+            
+            $('tbody').html('<tr><td colspan="4" class="px-6 py-12 text-center"><svg class="animate-spin h-8 w-8 mx-auto text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p class="mt-2 text-gray-500">Buscando...</p></td></tr>');
+            
+            $.ajax({
+                url: '{{ route("admin.beneficiarios.index") }}',
+                method: 'GET',
+                data: { search },
+                dataType: 'json',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                success: function(response) {
+                    if (response.beneficiarios.length === 0) {
+                        $('tbody').html('<tr><td colspan="4" class="px-6 py-12 text-center"><p class="text-gray-500">No se encontraron beneficiarios</p></td></tr>');
+                        return;
+                    }
+                    
+                    let html = '';
+                    response.beneficiarios.forEach(beneficiario => {
+                        html += `
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <div class="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+                                                <span class="text-purple-600 font-semibold text-sm">${beneficiario.user.name.substring(0, 2).toUpperCase()}</span>
+                                            </div>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">${beneficiario.user.name}</div>
+                                            <div class="text-sm text-gray-500">${beneficiario.user.email}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${beneficiario.ci}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${beneficiario.telefono || 'N/A'}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end gap-2">
+                                        <a href="/admin/beneficiarios/${beneficiario.id}" class="text-indigo-600 hover:text-indigo-900" title="Ver detalles">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    $('tbody').html(html);
+                },
+                error: function() {
+                    $('tbody').html('<tr><td colspan="4" class="px-6 py-12 text-center text-red-600">Error al cargar los datos</td></tr>');
+                }
+            });
+        }, 300); // Debounce 300ms
+    });
+});
+</script>
+@endpush
+
 @endsection

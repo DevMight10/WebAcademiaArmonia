@@ -122,6 +122,10 @@ async function verDetalles(compraId) {
     compraActual = compraId;
     
     try {
+        // ========================================
+        // IMPLEMENTACIÓN AJAX CON FETCH API
+        // Ver detalles de compra (JSON)
+        // ========================================
         const response = await fetch(`/coordinador/compras/${compraId}`);
         const data = await response.json();
         
@@ -227,6 +231,10 @@ async function aprobarCompra() {
     }
     
     try {
+        // ========================================
+        // IMPLEMENTACIÓN AJAX CON FETCH API
+        // Aprobar compra sin recargar (JSON)
+        // ========================================
         const response = await fetch(`/coordinador/compras/${compraActual}/aprobar`, {
             method: 'POST',
             headers: {
@@ -259,6 +267,10 @@ async function rechazarCompra() {
     }
     
     try {
+        // ========================================
+        // IMPLEMENTACIÓN AJAX CON FETCH API
+        // Rechazar compra sin recargar (JSON)
+        // ========================================
         const response = await fetch(`/coordinador/compras/${compraActual}/rechazar`, {
             method: 'POST',
             headers: {

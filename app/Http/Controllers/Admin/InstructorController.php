@@ -18,7 +18,8 @@ use Illuminate\Support\Str;
 class InstructorController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Listar instructores con filtros múltiples.
+     * Incluye búsqueda por nombre, CI, categoría, estado y especialidad.
      */
     public function index(Request $request)
     {
@@ -57,6 +58,19 @@ class InstructorController extends Controller
 
         // Obtener instrumentos para filtro
         $instrumentos = Instrumento::where('estado', true)->orderBy('nombre')->get();
+
+        // Respuesta JSON para peticiones AJAX (búsqueda en tiempo real)
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'instructores' => $instructores->items(),
+                'pagination' => [
+                    'current_page' => $instructores->currentPage(),
+                    'last_page' => $instructores->lastPage(),
+                    'per_page' => $instructores->perPage(),
+                    'total' => $instructores->total(),
+                ],
+            ]);
+        }
 
         return view('admin.instructores.index', compact('instructores', 'categorias', 'instrumentos'));
     }

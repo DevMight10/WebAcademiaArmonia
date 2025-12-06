@@ -9,11 +9,15 @@ use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
+    /**
+     * Listar clientes con búsqueda en tiempo real.
+     * Retorna JSON cuando la petición es AJAX.
+     */
     public function index(Request $request)
     {
         $query = Cliente::with('user');
 
-        // Búsqueda
+        // Búsqueda por nombre, email o CI
         if ($request->filled('search')) {
             $search = $request->search;
             $query->whereHas('user', function($q) use ($search) {
@@ -23,6 +27,19 @@ class ClienteController extends Controller
         }
 
         $clientes = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+
+        // Respuesta JSON para peticiones AJAX (búsqueda en tiempo real)
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'clientes' => $clientes->items(),
+                'pagination' => [
+                    'current_page' => $clientes->currentPage(),
+                    'last_page' => $clientes->lastPage(),
+                    'per_page' => $clientes->perPage(),
+                    'total' => $clientes->total(),
+                ],
+            ]);
+        }
 
         return view('admin.clientes.index', compact('clientes'));
     }
