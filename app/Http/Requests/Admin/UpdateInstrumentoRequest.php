@@ -7,17 +7,13 @@ use Illuminate\Validation\Rule;
 
 class UpdateInstrumentoRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
-        return true; // TODO: Implement authorization logic
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
+
     public function rules(): array
     {
         return [
@@ -28,9 +24,7 @@ class UpdateInstrumentoRequest extends FormRequest
         ];
     }
 
-    /**
-     * Get custom messages for validator errors.
-     */
+
     public function messages(): array
     {
         return [
