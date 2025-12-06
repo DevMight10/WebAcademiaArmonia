@@ -7,15 +7,15 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreInstrumentoRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Determinar si el usuario está autorizado para esta petición.
      */
     public function authorize(): bool
     {
-        return true; // TODO: Implement authorization logic
+        return true; // Autorización manejada por middleware
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Reglas de validación para crear un instrumento.
      */
     public function rules(): array
     {
@@ -28,7 +28,7 @@ class StoreInstrumentoRequest extends FormRequest
     }
 
     /**
-     * Get custom messages for validator errors.
+     * Mensajes personalizados para errores de validación.
      */
     public function messages(): array
     {

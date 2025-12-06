@@ -12,35 +12,34 @@ use Illuminate\Http\Request;
 class InstrumentoController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     * Supports AJAX requests for live filtering (returns JSON).
+     * Listar instrumentos con soporte para filtrado en tiempo real.
+     * Retorna JSON cuando la petición es AJAX para actualización dinámica.
      */
     public function index(Request $request)
     {
         $query = Instrumento::query();
 
-        // Búsqueda por nombre
+        // Aplicar búsqueda por nombre si está presente
         if ($request->filled('search')) {
             $query->where('nombre', 'like', '%' . $request->search . '%');
         }
 
-        // Filtro por categoría
+        // Filtrar por categoría específica
         if ($request->filled('categoria')) {
             $query->where('categoria', $request->categoria);
         }
 
-        // Filtro por estado
+        // Filtrar por estado (activo/inactivo)
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado === '1');
         }
 
-        // Ordenar por nombre ascendente por defecto
+        // Ordenamiento alfabético para facilitar la búsqueda visual
         $instrumentos = $query->orderBy('nombre')->paginate(10)->withQueryString();
 
-        // Obtener categorías para el filtro
         $categorias = CategoriaInstrumento::cases();
 
-        // Si es una petición AJAX, retornar JSON
+        // Respuesta JSON para peticiones AJAX (búsqueda en tiempo real)
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'instrumentos' => $instrumentos->items(),
@@ -57,7 +56,7 @@ class InstrumentoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mostrar formulario de creación de instrumento.
      */
     public function create()
     {
@@ -66,17 +65,18 @@ class InstrumentoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guardar nuevo instrumento en la base de datos.
+     * El factor de costo se calcula automáticamente según la categoría.
      */
     public function store(StoreInstrumentoRequest $request)
     {
-        // El factor_costo se asigna automáticamente según la categoría
+        // Obtener el enum de categoría para acceder al factor de costo
         $categoria = CategoriaInstrumento::from($request->categoria);
 
         $instrumento = Instrumento::create([
             'nombre' => $request->nombre,
             'categoria' => $request->categoria,
-            'factor_costo' => $categoria->factorCosto(),
+            'factor_costo' => $categoria->factorCosto(), // Factor automático según categoría
             'estado' => $request->has('estado') ? $request->estado : true,
         ]);
 
@@ -86,7 +86,7 @@ class InstrumentoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Mostrar detalles de un instrumento específico.
      */
     public function show(Instrumento $instrumento)
     {
@@ -95,7 +95,7 @@ class InstrumentoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Mostrar formulario de edición de instrumento.
      */
     public function edit(Instrumento $instrumento)
     {
@@ -104,11 +104,12 @@ class InstrumentoController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualizar instrumento existente.
+     * Recalcula el factor de costo si cambió la categoría.
      */
     public function update(UpdateInstrumentoRequest $request, Instrumento $instrumento)
     {
-        // El factor_costo se actualiza automáticamente según la categoría
+        // Recalcular factor de costo en caso de cambio de categoría
         $categoria = CategoriaInstrumento::from($request->categoria);
 
         $instrumento->update([
@@ -124,11 +125,12 @@ class InstrumentoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Desactivar instrumento (soft delete).
+     * No eliminamos físicamente para mantener historial de clases.
      */
     public function destroy(Instrumento $instrumento)
     {
-        // No eliminamos, solo desactivamos
+        // Desactivación lógica en lugar de eliminación física
         $instrumento->update(['estado' => false]);
 
         return redirect()
@@ -137,7 +139,7 @@ class InstrumentoController extends Controller
     }
 
     /**
-     * Restore a deactivated instrument.
+     * Reactivar un instrumento previamente desactivado.
      */
     public function restore(Instrumento $instrumento)
     {

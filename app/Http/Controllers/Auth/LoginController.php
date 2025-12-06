@@ -11,6 +11,10 @@ use App\Http\Requests\Auth\LoginRequest; // [NEW] Importar Request personalizado
 
 class LoginController extends Controller
 {
+    /**
+     * Mostrar formulario de inicio de sesión.
+     * Redirige al dashboard si ya está autenticado.
+     */
     public function showLoginForm()
     {
         // Si ya está autenticado, redirigir al dashboard
@@ -21,16 +25,24 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
+    /**
+     * Procesar intento de login con rate limiting.
+     * La autenticación y límite de intentos se manejan en LoginRequest.
+     */
     public function login(LoginRequest $request)
     {
-        $request->authenticate(); // [UPDATED] Maneja Rate Limiting y Auth
+        $request->authenticate(); // Maneja Rate Limiting y autenticación
 
-        $request->session()->regenerate();
+        $request->session()->regenerate(); // Prevenir session fixation
 
         // Redirigir según el rol del usuario
         return redirect()->intended(route('dashboard'));
     }
 
+    /**
+     * Cerrar sesión del usuario actual.
+     * Invalida la sesión y regenera el token CSRF.
+     */
     public function logout(Request $request)
     {
         Auth::logout();

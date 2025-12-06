@@ -7,29 +7,35 @@ class PrecioService
     const PRECIO_BASE_POR_MINUTO = 25;  // Bs por minuto
     const DESCUENTO_MAXIMO = 45;        // Porcentaje máximo
 
-    // Calcula el descuento basado en los minutos comprados Cada 300 minutos = 5% de descuento hasta máximo 45%
+    /**
+     * Calcula el descuento basado en los minutos comprados.
+     * Sistema escalonado: cada 300 minutos = 5% de descuento hasta máximo 45%.
+     */
     public static function calcularDescuento(int $minutos): float
     {
         if ($minutos < 300) {
             return 0;
         }
 
-        // Cada 300 minutos da 5% de descuento
+        // Cada bloque de 300 minutos otorga 5% adicional
         $bloques = floor($minutos / 300);
         $descuento = $bloques * 5;
 
-        // Máximo 45%
+        // Tope de 45% para evitar pérdidas
         return min($descuento, self::DESCUENTO_MAXIMO);
     }
 
-    // Calcula el subtotal sin descuento
-
+    /**
+     * Calcula el subtotal sin aplicar descuentos.
+     */
     public static function calcularSubtotal(int $minutos): float
     {
         return $minutos * self::PRECIO_BASE_POR_MINUTO;
     }
 
-    // Calcula el monto del descuento en Bs
+    /**
+     * Calcula el monto del descuento en Bolivianos.
+     */
     public static function calcularMontoDescuento(int $minutos): float
     {
         $subtotal = self::calcularSubtotal($minutos);
@@ -38,8 +44,9 @@ class PrecioService
         return $subtotal * ($porcentajeDescuento / 100);
     }
 
-    // Calcula el total a pagar con descuento aplicado
-
+    /**
+     * Calcula el total a pagar con descuento aplicado.
+     */
     public static function calcularTotal(int $minutos): float
     {
         $subtotal = self::calcularSubtotal($minutos);
@@ -48,8 +55,10 @@ class PrecioService
         return $subtotal - $descuento;
     }
 
-    // Obtiene todos los paquetes predefinidos
-
+    /**
+     * Obtiene todos los paquetes predefinidos con sus precios.
+     * Paquetes desde 300 hasta 2700 minutos (5 a 45 horas).
+     */
     public static function obtenerPaquetes(): array
     {
         $paquetes = [];
@@ -70,8 +79,10 @@ class PrecioService
         return $paquetes;
     }
 
-    // Obtiene el nombre del paquete según minutos
-
+    /**
+     * Obtiene el nombre del paquete según cantidad de minutos.
+     * Clasifica desde "Básico" hasta "Premium".
+     */
     public static function obtenerNombrePaquete(int $minutos): string
     {
         return match(true) {
@@ -86,8 +97,9 @@ class PrecioService
         };
     }
 
-    // Formatea un monto en Bs con separadores de miles
-
+    /**
+     * Formatea un monto en Bs con separadores de miles.
+     */
     public static function formatearMonto(float $monto): string
     {
         return number_format($monto, 2, ',', '.') . ' Bs';

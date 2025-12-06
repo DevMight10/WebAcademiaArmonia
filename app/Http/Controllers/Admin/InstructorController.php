@@ -18,7 +18,8 @@ use Illuminate\Support\Str;
 class InstructorController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Listar instructores con filtros múltiples.
+     * Incluye búsqueda por nombre, CI, categoría, estado y especialidad.
      */
     public function index(Request $request)
     {
@@ -62,7 +63,7 @@ class InstructorController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mostrar formulario de creación de instructor.
      */
     public function create()
     {
@@ -73,33 +74,34 @@ class InstructorController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guardar nuevo instructor con usuario asociado.
+     * Crea automáticamente un usuario con contraseña temporal.
      */
     public function store(StoreInstructorRequest $request)
     {
         try {
             DB::beginTransaction();
 
-            // Obtener el rol de instructor
+            // Verificar que el rol de instructor existe en la BD
             $rolInstructor = Role::where('slug', 'instructor')->first();
 
             if (!$rolInstructor) {
                 throw new \Exception('El rol de instructor no existe en el sistema.');
             }
 
-            // Crear el usuario asociado
+            // Crear usuario del sistema para el instructor
             $user = User::create([
                 'name' => $request->nombre . ' ' . $request->apellido,
                 'email' => $request->email,
-                'password' => Hash::make('password123'), // Contraseña temporal
+                'password' => Hash::make('password123'), // Temporal - debe cambiarla en primer login
                 'role_id' => $rolInstructor->id,
                 'email_verified_at' => now(),
             ]);
 
-            // Obtener el factor de costo según la categoría
+            // Factor de costo automático según categoría (Regular/Premium/Invitado)
             $categoria = CategoriaInstructor::from($request->categoria);
 
-            // Crear el instructor
+            // Crear perfil de instructor vinculado al usuario
             $instructor = Instructor::create([
                 'user_id' => $user->id,
                 'ci' => $request->ci,
@@ -109,7 +111,7 @@ class InstructorController extends Controller
                 'estado' => $request->has('estado') ? $request->estado : true,
             ]);
 
-            // Sincronizar especialidades (instrumentos que puede enseñar)
+            // Asignar especialidades (instrumentos que puede enseñar)
             if ($request->has('especialidades') && is_array($request->especialidades)) {
                 foreach ($request->especialidades as $instrumentoId) {
                     $instructor->especialidades()->create([
@@ -134,7 +136,7 @@ class InstructorController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Mostrar detalles completos de un instructor.
      */
     public function show(Instructor $instructore)
     {
@@ -145,7 +147,7 @@ class InstructorController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Mostrar formulario de edición de instructor.
      */
     public function edit(Instructor $instructore)
     {
@@ -153,30 +155,31 @@ class InstructorController extends Controller
         $categorias = CategoriaInstructor::cases();
         $instrumentos = Instrumento::where('estado', true)->orderBy('nombre')->get();
 
-        // Obtener IDs de especialidades actuales
+        // Pre-seleccionar especialidades actuales en el formulario
         $especialidadesActuales = $instructore->especialidades->pluck('instrumento_id')->toArray();
 
         return view('admin.instructores.edit', compact('instructore', 'categorias', 'instrumentos', 'especialidadesActuales'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualizar instructor y sus especialidades.
+     * Recalcula el factor de costo si cambió la categoría.
      */
     public function update(UpdateInstructorRequest $request, Instructor $instructore)
     {
         try {
             DB::beginTransaction();
 
-            // Actualizar datos del usuario
+            // Actualizar nombre y email en la tabla users
             $instructore->user->update([
                 'name' => $request->nombre . ' ' . $request->apellido,
                 'email' => $request->email,
             ]);
 
-            // Actualizar el factor de costo según la categoría
+            // Recalcular factor de costo si cambió de categoría
             $categoria = CategoriaInstructor::from($request->categoria);
 
-            // Actualizar el instructor
+            // Actualizar datos del perfil de instructor
             $instructore->update([
                 'ci' => $request->ci,
                 'telefono' => $request->telefono,
@@ -185,11 +188,10 @@ class InstructorController extends Controller
                 'estado' => $request->has('estado') ? $request->estado : false,
             ]);
 
-            // Actualizar especialidades
-            // Eliminar las especialidades actuales
+            // Reemplazar especialidades (eliminar antiguas y crear nuevas)
             $instructore->especialidades()->delete();
 
-            // Crear las nuevas especialidades
+            // Asignar nuevas especialidades seleccionadas
             if ($request->has('especialidades') && is_array($request->especialidades)) {
                 foreach ($request->especialidades as $instrumentoId) {
                     $instructore->especialidades()->create([
@@ -214,11 +216,12 @@ class InstructorController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Desactivar instructor (soft delete).
+     * No eliminamos para mantener historial de clases impartidas.
      */
     public function destroy(Instructor $instructore)
     {
-        // No eliminamos, solo desactivamos
+        // Desactivación lógica para preservar historial
         $instructore->update(['estado' => false]);
 
         return redirect()
@@ -227,7 +230,7 @@ class InstructorController extends Controller
     }
 
     /**
-     * Restore a deactivated instructor.
+     * Reactivar un instructor previamente desactivado.
      */
     public function restore(Instructor $instructore)
     {
