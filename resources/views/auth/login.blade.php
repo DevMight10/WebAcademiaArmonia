@@ -22,7 +22,11 @@
 
         <!-- Form -->
         <div class="p-6">
-            <form method="POST" action="{{ route('login.post') }}">
+            <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                {{-- ========================================
+                    SEGURIDAD - PROTECCIÓN CSRF
+                    Token para prevenir ataques Cross-Site Request Forgery
+                    ======================================== --}}
                 @csrf
 
                 <!-- Email -->

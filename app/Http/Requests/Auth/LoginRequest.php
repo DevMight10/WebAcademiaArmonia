@@ -58,9 +58,13 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Ensure the login request is not rate limited.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Asegurar que no se exceda el límite de intentos de login.
+     * Máximo: 5 intentos por minuto por combinación email+IP
+     * 
+     * ========================================
+     * SEGURIDAD - RATE LIMITING
+     * Prevención de ataques de fuerza bruta
+     * ========================================
      */
     public function ensureIsNotRateLimited(): void
     {

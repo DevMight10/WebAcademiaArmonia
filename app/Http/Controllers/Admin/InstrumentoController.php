@@ -19,7 +19,10 @@ class InstrumentoController extends Controller
     {
         $query = Instrumento::query();
 
-        // Búsqueda por nombre
+        // ========================================
+        // SEGURIDAD - PREVENCIÓN SQL INJECTION
+        // Uso de Eloquent ORM con parameter binding
+        // ========================================
         if ($request->filled('search')) {
             $query->where('nombre', 'like', '%' . $request->search . '%');
         }
@@ -40,7 +43,10 @@ class InstrumentoController extends Controller
         // Obtener categorías para el filtro
         $categorias = CategoriaInstrumento::cases();
 
-        // Si es una petición AJAX, retornar JSON
+        // ========================================
+        // RESPUESTA JSON PARA AJAX (BACKEND)
+        // Detecta peticiones AJAX y retorna JSON
+        // ========================================
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'instrumentos' => $instrumentos->items(),

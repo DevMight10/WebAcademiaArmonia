@@ -59,7 +59,10 @@ class InstructorController extends Controller
         // Obtener instrumentos para filtro
         $instrumentos = Instrumento::where('estado', true)->orderBy('nombre')->get();
 
-        // Respuesta JSON para peticiones AJAX (búsqueda en tiempo real)
+        // ========================================
+        // RESPUESTA JSON PARA AJAX (BACKEND)
+        // Detecta peticiones AJAX y retorna JSON
+        // ========================================
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'instructores' => $instructores->items(),

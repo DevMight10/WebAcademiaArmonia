@@ -28,7 +28,10 @@ class BeneficiarioController extends Controller
 
         $beneficiarios = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
-        // Respuesta JSON para peticiones AJAX (búsqueda en tiempo real)
+        // ========================================
+        // RESPUESTA JSON PARA AJAX (BACKEND)
+        // Detecta peticiones AJAX y retorna JSON
+        // ========================================
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'beneficiarios' => $beneficiarios->items(),

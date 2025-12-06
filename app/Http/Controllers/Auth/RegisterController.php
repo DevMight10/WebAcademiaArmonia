@@ -70,6 +70,10 @@ class RegisterController extends Controller
             $role = Role::where('slug', $rolSlug)->first();
 
             // Crear usuario
+            // ========================================
+            // SEGURIDAD - CONTRASEÑAS HASHEADAS
+            // Uso de bcrypt para hashear contraseñas
+            // ========================================
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
