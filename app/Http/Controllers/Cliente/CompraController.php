@@ -300,6 +300,7 @@ class CompraController extends Controller
             ], 400);
         }
         
+        
         DB::beginTransaction();
         try {
             foreach ($nuevaDistribucion as $distribucionId => $nuevosMinutos) {
@@ -307,10 +308,19 @@ class CompraController extends Controller
                     ->where('compra_id', $compra->id)
                     ->firstOrFail();
                 
+                // VALIDACIÓN: No permitir redistribuir a 0 minutos
+                if ($nuevosMinutos == 0) {
+                    DB::rollBack();
+                    return response()->json([
+                        'message' => 'No puedes asignar 0 minutos a un beneficiario. Todos deben tener al menos 1 minuto.'
+                    ], 400);
+                }
+                
                 // Solo actualizar minutos_disponibles (no afecta los consumidos)
                 $dist->minutos_disponibles = $nuevosMinutos;
                 $dist->save();
             }
+
             
             DB::commit();
             

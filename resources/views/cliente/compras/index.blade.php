@@ -260,7 +260,7 @@ async function abrirModalRedistribucion(compraId) {
                     <span class="text-2xl font-bold text-indigo-600" id="display-${index}">0</span>
                 </div>
                 <input type="range" 
-                       min="0" 
+                       min="1" 
                        max="${dist.minutos_disponibles}" 
                        value="${dist.minutos_disponibles}"
                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
@@ -269,7 +269,7 @@ async function abrirModalRedistribucion(compraId) {
                        oninput="actualizarRedistribucion(${index}, this.value)">
                 <input type="hidden" name="distribuciones[${dist.id}]" id="redistribucion-${index}" value="${dist.minutos_disponibles}">
                 <div class="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>0 min</span>
+                    <span>1 min (mínimo)</span>
                     <span>${dist.minutos_disponibles} min</span>
                 </div>
             `;

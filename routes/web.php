@@ -123,6 +123,12 @@ Route::middleware(['auth'])->group(function () {
         
         // Buscar beneficiario por email
         Route::post('/beneficiarios/buscar', [CompraController::class, 'buscarBeneficiario'])->name('beneficiarios.buscar');
+        
+        // RF-10: Generación de Reportes (PDF/Excel)
+        Route::get('/reportes', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'index'])->name('reportes.index');
+        Route::get('/reportes/compra/{id}/pdf', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'generarPDF'])->name('reportes.compra.pdf');
+        Route::post('/reportes/listado/pdf', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'generarListadoPDF'])->name('reportes.listado.pdf');
+        Route::post('/reportes/excel', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'exportarExcel'])->name('reportes.excel');
     });
 
     // ============================================
