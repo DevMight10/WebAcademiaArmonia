@@ -225,4 +225,104 @@ class CompraController extends Controller
 
         return view('cliente.compras.index', compact('compras'));
     }
+
+    /**
+     * Obtener distribuciones de una compra para redistribución
+     * 
+     * @param int $id ID de la compra
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function obtenerDistribuciones($id)
+    {
+        $cliente = auth()->user()->cliente;
+        
+        $compra = Compra::where('id', $id)
+            ->where('cliente_id', $cliente->id)
+            ->with(['distribuciones.beneficiario.user'])
+            ->firstOrFail();
+        
+        $distribuciones = $compra->distribuciones->map(function($dist) {
+            return [
+                'id' => $dist->id,
+                'beneficiario_id' => $dist->beneficiario_id,
+                'beneficiario_nombre' => $dist->beneficiario->user->name,
+                'minutos_asignados' => $dist->minutos_asignados,
+                'minutos_disponibles' => $dist->minutos_disponibles,
+                'minutos_consumidos' => $dist->minutos_consumidos,
+            ];
+        });
+        
+        return response()->json([
+            'compra_id' => $compra->id,
+            'distribuciones' => $distribuciones
+        ]);
+    }
+
+    /**
+     * Redistribuir créditos entre beneficiarios
+     * 
+     * Solo redistribuye créditos disponibles (no consumidos)
+     * 
+     * @param Request $request
+     * @param int $id ID de la compra
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function redistribuirCreditos(Request $request, $id)
+    {
+        $cliente = auth()->user()->cliente;
+        
+        $compra = Compra::where('id', $id)
+            ->where('cliente_id', $cliente->id)
+            ->with('distribuciones')
+            ->firstOrFail();
+        
+        // Validar que la compra esté completada
+        if ($compra->estado !== 'Completada') {
+            return response()->json([
+                'message' => 'Solo puedes redistribuir créditos de compras completadas'
+            ], 400);
+        }
+        
+        $request->validate([
+            'distribuciones' => 'required|array',
+            'distribuciones.*' => 'required|integer|min:0',
+        ]);
+        
+        // Calcular total de créditos disponibles
+        $totalDisponible = $compra->distribuciones->sum('minutos_disponibles');
+        $nuevaDistribucion = $request->distribuciones;
+        $sumaDistribucion = array_sum($nuevaDistribucion);
+        
+        // Validar que la suma no exceda los créditos disponibles
+        if ($sumaDistribucion > $totalDisponible) {
+            return response()->json([
+                'message' => 'La suma de créditos asignados excede el total disponible'
+            ], 400);
+        }
+        
+        DB::beginTransaction();
+        try {
+            foreach ($nuevaDistribucion as $distribucionId => $nuevosMinutos) {
+                $dist = DistribucionCredito::where('id', $distribucionId)
+                    ->where('compra_id', $compra->id)
+                    ->firstOrFail();
+                
+                // Solo actualizar minutos_disponibles (no afecta los consumidos)
+                $dist->minutos_disponibles = $nuevosMinutos;
+                $dist->save();
+            }
+            
+            DB::commit();
+            
+            return response()->json([
+                'message' => 'Créditos redistribuidos exitosamente'
+            ]);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Error al redistribuir créditos: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

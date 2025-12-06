@@ -66,7 +66,7 @@
                        name="minutos_totales"
                        min="30"
                        step="10"
-                       value="{{ old('minutos_totales', 300) }}"
+                       value="{{ old('minutos_totales', request()->get('minutos', 300)) }}"
                        required>
                 <small class="text-gray-500 text-xs">Mínimo 30 minutos</small>
             </div>

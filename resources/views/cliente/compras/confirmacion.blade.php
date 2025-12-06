@@ -187,7 +187,7 @@
                     1
                 </span>
                 <div class="flex-1 pt-1">
-                    <p class="text-gray-700">El coordinador académico revisará tu solicitud</p>
+                    <p class="text-gray-700">El coordinador académico revisará tu solicitud de compra</p>
                 </div>
             </li>
             <li class="flex items-start">
@@ -195,7 +195,7 @@
                     2
                 </span>
                 <div class="flex-1 pt-1">
-                    <p class="text-gray-700">Recibirás las instrucciones de pago (transferencia, QR o efectivo)</p>
+                    <p class="text-gray-700">Una vez aprobada, los créditos se activarán automáticamente</p>
                 </div>
             </li>
             <li class="flex items-start">
@@ -203,15 +203,7 @@
                     3
                 </span>
                 <div class="flex-1 pt-1">
-                    <p class="text-gray-700">Realiza el pago y envía el comprobante</p>
-                </div>
-            </li>
-            <li class="flex items-start">
-                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-indigo-600 text-white font-bold text-sm mr-4">
-                    4
-                </span>
-                <div class="flex-1 pt-1">
-                    <p class="text-gray-700">Una vez verificado el pago, los créditos se activarán automáticamente</p>
+                    <p class="text-gray-700">Podrás usar tus créditos para agendar clases musicales</p>
                 </div>
             </li>
         </ol>

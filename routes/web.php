@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Cliente\PaqueteController;
 use App\Http\Controllers\Cliente\CompraController;
+use App\Http\Controllers\Coordinador\CompraCoordinadorController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\InstrumentoController;
 
@@ -12,13 +13,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// ============================================
 // RUTAS DE AUTENTICACIÓN (Públicas)
-// ============================================
-
-// Login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-
 
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -27,9 +23,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 
-// ============================================
 // RUTAS PROTEGIDAS (Requieren autenticación)
-// ============================================
 
 Route::middleware(['auth'])->group(function () {
 
@@ -45,8 +39,8 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('instructor.dashboard');
         } elseif ($user->isCliente()) {
             return redirect()->route('cliente.dashboard');
-        } elseif ($user->isEstudiante()) {
-            return redirect()->route('estudiante.dashboard');
+        } elseif ($user->isBeneficiario()) {
+            return redirect()->route('beneficiario.dashboard');
         }
 
         abort(403, 'No tienes un rol asignado.');
@@ -80,13 +74,18 @@ Route::middleware(['auth'])->group(function () {
     // ============================================
     // RUTAS DE COORDINADOR
     // ============================================
-    Route::prefix('coordinador')->name('coordinador.')->group(function () {
+    Route::middleware(['role:coordinador'])->prefix('coordinador')->name('coordinador.')->group(function () {
         Route::get('/dashboard', function () {
             return view('coordinador.dashboard');
         })->name('dashboard');
 
-        // TODO: Agregar rutas de gestión de pagos
+        // Gestión de compras
+        Route::get('/compras', [CompraCoordinadorController::class, 'index'])->name('compras.index');
+        Route::get('/compras/{id}', [CompraCoordinadorController::class, 'show'])->name('compras.show');
+        Route::post('/compras/{id}/aprobar', [CompraCoordinadorController::class, 'aprobar'])->name('compras.aprobar');
+        Route::post('/compras/{id}/rechazar', [CompraCoordinadorController::class, 'rechazar'])->name('compras.rechazar');
     });
+
 
     // ============================================
     // RUTAS DE INSTRUCTOR
@@ -118,18 +117,23 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/compras', [CompraController::class, 'store'])->name('compras.store');
         Route::get('/compras/{id}/confirmacion', [CompraController::class, 'confirmacion'])->name('compras.confirmacion');
         
+        // Redistribución de créditos
+        Route::get('/compras/{id}/distribuciones', [CompraController::class, 'obtenerDistribuciones'])->name('compras.distribuciones');
+        Route::put('/compras/{id}/redistribuir', [CompraController::class, 'redistribuirCreditos'])->name('compras.redistribuir');
+        
         // Buscar beneficiario por email
         Route::post('/beneficiarios/buscar', [CompraController::class, 'buscarBeneficiario'])->name('beneficiarios.buscar');
     });
 
     // ============================================
-    // RUTAS DE ESTUDIANTE/BENEFICIARIO
+    // RUTAS DE BENEFICIARIO
     // ============================================
-    Route::prefix('estudiante')->name('estudiante.')->group(function () {
+    Route::prefix('beneficiario')->name('beneficiario.')->middleware(['auth', 'role:beneficiario'])->group(function () {
         Route::get('/dashboard', function () {
-            return view('estudiante.dashboard');
+            return view('beneficiario.dashboard');
         })->name('dashboard');
 
-        // TODO: Agregar rutas de consulta de créditos
+        // Créditos
+        Route::get('/creditos', [\App\Http\Controllers\Beneficiario\CreditoController::class, 'index'])->name('creditos.index');
     });
 });
