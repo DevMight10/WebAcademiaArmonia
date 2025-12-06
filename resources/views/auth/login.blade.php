@@ -100,14 +100,5 @@
             </div>
         </div>
     </div>
-
-    <!-- Credenciales de prueba -->
-    <div class="mt-6 bg-gray-200 border border-gray-300 rounded-lg p-4">
-        <p class="text-xs text-gray-700 font-semibold mb-2 text-center">Credenciales de prueba:</p>
-        <div class="space-y-1 text-xs text-gray-600 text-center">
-            <p><strong>Admin:</strong> admin@armonia.com / admin123</p>
-            <p><strong>Coordinador:</strong> coordinador@armonia.com / coord123</p>
-        </div>
-    </div>
 </div>
 @endsection
