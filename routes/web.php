@@ -87,9 +87,7 @@ Route::middleware(['auth'])->group(function () {
     // RUTAS DE COORDINADOR
     // ============================================
     Route::middleware(['role:coordinador'])->prefix('coordinador')->name('coordinador.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('coordinador.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [\App\Http\Controllers\Coordinador\DashboardController::class, 'index'])->name('dashboard');
 
         // Gestión de compras
         Route::get('/compras', [CompraCoordinadorController::class, 'index'])->name('compras.index');

@@ -1,18 +1,16 @@
 @extends('layouts.coordinador')
 
-@section('title', 'Dashboard Coordinador')
-
 @section('coordinador-content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Dashboard Coordinador Académico</h1>
-        <p class="mt-2 text-sm text-gray-600">Bienvenido, {{ auth()->user()->name }}</p>
+<div class="space-y-6">
+    {{-- Header --}}
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900">Dashboard Coordinador</h1>
+        <p class="mt-1 text-sm text-gray-600">Resumen general de compras y citas</p>
     </div>
 
-    <!-- Resumen del Día -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <!-- Pagos Pendientes -->
+    {{-- Estadísticas --}}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {{-- Compras Pendientes --}}
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="flex-shrink-0 bg-amber-500 rounded-md p-3">
@@ -22,48 +20,31 @@
                 </div>
                 <div class="ml-5 w-0 flex-1">
                     <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">Pagos Pendientes</dt>
-                        <dd class="text-lg font-semibold text-gray-900">--</dd>
+                        <dt class="text-sm font-medium text-gray-500">Compras Pendientes</dt>
+                        <dd class="text-lg font-semibold text-gray-900">{{ $comprasPendientes }}</dd>
                     </dl>
                 </div>
             </div>
         </div>
 
-        <!-- Clases del Día -->
+        {{-- Citas Pendientes --}}
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
-                <div class="flex-shrink-0 bg-sky-500 rounded-md p-3">
+                <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
                     <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                 </div>
                 <div class="ml-5 w-0 flex-1">
                     <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">Clases Hoy</dt>
-                        <dd class="text-lg font-semibold text-gray-900">--</dd>
+                        <dt class="text-sm font-medium text-gray-500">Citas Pendientes</dt>
+                        <dd class="text-lg font-semibold text-gray-900">{{ $citasPendientes }}</dd>
                     </dl>
                 </div>
             </div>
         </div>
 
-        <!-- Solicitudes Pendientes -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
-                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                    </svg>
-                </div>
-                <div class="ml-5 w-0 flex-1">
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">Solicitudes</dt>
-                        <dd class="text-lg font-semibold text-gray-900">--</dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-
-        <!-- Ventas del Día -->
+        {{-- Ingresos del Mes --}}
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="flex-shrink-0 bg-emerald-500 rounded-md p-3">
@@ -73,58 +54,116 @@
                 </div>
                 <div class="ml-5 w-0 flex-1">
                     <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">Ventas (Bs)</dt>
-                        <dd class="text-lg font-semibold text-gray-900">--</dd>
+                        <dt class="text-sm font-medium text-gray-500">Ingresos del Mes</dt>
+                        <dd class="text-lg font-semibold text-gray-900">Bs {{ number_format($ingresosDelMes, 2) }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        {{-- Estudiantes Activos --}}
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500">Estudiantes Activos</dt>
+                        <dd class="text-lg font-semibold text-gray-900">{{ $estudiantesActivos }}</dd>
                     </dl>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Acciones Principales -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Gestión de Compras -->
+    {{-- Acciones Rápidas y Alertas --}}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {{-- Citas Próximas --}}
         <div class="bg-white rounded-lg shadow">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-900">Gestión de Compras</h2>
+                <h3 class="text-lg font-semibold text-gray-900">Próximas Citas</h3>
             </div>
             <div class="p-6">
-                <p class="text-gray-600 mb-4">
-                    Revisa y aprueba las solicitudes de compra de créditos musicales.
-                    Gestiona el flujo de aprobación de compras pendientes.
-                </p>
-                <a href="{{ route('coordinador.compras.index') }}" 
-                   class="block w-full text-center px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
-                    <div class="flex items-center justify-center">
-                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        Gestionar Compras
+                @forelse($citasProximas as $cita)
+                    <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">{{ $cita->beneficiario->user->name }}</p>
+                            <p class="text-xs text-gray-500">{{ $cita->instrumento->nombre }} - {{ $cita->instructor->user->name }}</p>
+                            <p class="text-xs text-gray-400">{{ $cita->fecha_hora->format('d/m/Y H:i') }}</p>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">
+                            Confirmada
+                        </span>
                     </div>
-                </a>
+                @empty
+                    <p class="text-sm text-gray-500 text-center py-4">No hay citas próximas</p>
+                @endforelse
             </div>
         </div>
 
-        <!-- Calendario de Clases -->
+        {{-- Compras Pendientes --}}
         <div class="bg-white rounded-lg shadow">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-900">Calendario y Asignaciones</h2>
+                <h3 class="text-lg font-semibold text-gray-900">Compras Pendientes</h3>
             </div>
             <div class="p-6">
-                <p class="text-gray-600 mb-4">
-                    Revisa solicitudes de agendamiento, asigna instructores
-                    y gestiona el calendario de clases musicales.
-                </p>
-                <a href="#" class="block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
-                    <div class="flex items-center justify-center">
-                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        Ver Calendario
+                @forelse($comprasPendientesRecientes as $compra)
+                    <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">{{ $compra->cliente->user->name }}</p>
+                            <p class="text-xs text-gray-500">{{ number_format($compra->minutos_totales) }} minutos - Bs {{ number_format($compra->total, 2) }}</p>
+                            <p class="text-xs text-gray-400">{{ $compra->created_at->format('d/m/Y H:i') }}</p>
+                        </div>
+                        <a href="{{ route('coordinador.compras.show', $compra->id) }}" class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
+                            Ver
+                        </a>
                     </div>
-                </a>
-                <p class="text-xs text-gray-500 mt-3">RF-03.2 (Próximamente)</p>
+                @empty
+                    <p class="text-sm text-gray-500 text-center py-4">No hay compras pendientes</p>
+                @endforelse
             </div>
+        </div>
+    </div>
+
+    {{-- Acciones Rápidas --}}
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Acciones Rápidas</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a href="{{ route('coordinador.compras.index') }}" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div class="flex items-center">
+                    <svg class="h-7 w-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <div class="ml-4">
+                        <h3 class="text-sm font-semibold text-gray-900">Gestionar Compras</h3>
+                    </div>
+                </div>
+            </a>
+
+            <a href="{{ route('coordinador.citas.index') }}" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div class="flex items-center">
+                    <svg class="h-7 w-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    <div class="ml-4">
+                        <h3 class="text-sm font-semibold text-gray-900">Gestionar Citas</h3>
+                    </div>
+                </div>
+            </a>
+
+            <a href="{{ route('coordinador.calendario') }}" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div class="flex items-center">
+                    <svg class="h-7 w-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <div class="ml-4">
+                        <h3 class="text-sm font-semibold text-gray-900">Ver Calendario</h3>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
