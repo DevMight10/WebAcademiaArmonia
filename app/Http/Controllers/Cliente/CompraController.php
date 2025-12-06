@@ -150,6 +150,11 @@ class CompraController extends Controller
                 // Buscar el beneficiario por user_id
                 $beneficiario = Beneficiario::where('user_id', $beneficiarioData['user_id'])->first();
 
+                // Si no existe y es el cliente, crear beneficiario automáticamente
+                if (!$beneficiario && $beneficiarioData['user_id'] == auth()->user()->id) {
+                    $beneficiario = $cliente->getOrCreateBeneficiario();
+                }
+
                 if ($beneficiario) {
                     // Crear la distribución de créditos
                     DistribucionCredito::create([
@@ -334,5 +339,21 @@ class CompraController extends Controller
                 'message' => 'Error al redistribuir créditos: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Mostrar historial completo de compras
+     */
+    public function historial()
+    {
+        $cliente = auth()->user()->cliente;
+        
+        // Obtener todas las compras con paginación
+        $compras = Compra::where('cliente_id', $cliente->id)
+            ->with('distribuciones.beneficiario.user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+        
+        return view('cliente.compras.historial', compact('compras'));
     }
 }

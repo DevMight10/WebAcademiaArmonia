@@ -116,10 +116,8 @@ Route::middleware(['auth'])->group(function () {
     // RUTAS DE CLIENTE
     // ============================================
     Route::middleware(['role:cliente'])->prefix('cliente')->name('cliente.')->group(function () {
-        Route::get('/dashboard', function () {
-            $cliente = auth()->user()->cliente;
-            return view('cliente.dashboard', compact('cliente'));
-        })->name('dashboard');
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Cliente\DashboardController::class, 'index'])->name('dashboard');
 
         // RF-01.1: Visualizar Paquetes de Créditos
         Route::get('/paquetes', [PaqueteController::class, 'index'])->name('paquetes.index');
@@ -130,6 +128,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/compras/crear', [CompraController::class, 'create'])->name('compras.create');
         Route::post('/compras', [CompraController::class, 'store'])->name('compras.store');
         Route::get('/compras/{id}/confirmacion', [CompraController::class, 'confirmacion'])->name('compras.confirmacion');
+        Route::get('/compras/historial', [CompraController::class, 'historial'])->name('compras.historial');
+        
+        // Agendamiento de clases (cliente como beneficiario)
+        Route::get('/agendamiento', [\App\Http\Controllers\Cliente\AgendamientoClienteController::class, 'index'])->name('agendamiento.index');
+        Route::post('/agendamiento', [\App\Http\Controllers\Cliente\AgendamientoClienteController::class, 'store'])->name('agendamiento.store');
+        Route::get('/agendamiento/instructores/{instrumentoId}', [\App\Http\Controllers\Cliente\AgendamientoClienteController::class, 'obtenerInstructores'])->name('agendamiento.instructores');
+        Route::post('/agendamiento/verificar-disponibilidad', [\App\Http\Controllers\Cliente\AgendamientoClienteController::class, 'verificarDisponibilidad'])->name('agendamiento.verificar');
+        
+        // Historial de clases del cliente
+        Route::get('/clases/historial', [\App\Http\Controllers\Cliente\AgendamientoClienteController::class, 'historial'])->name('clases.historial');
+        Route::post('/clases/{id}/cancelar', [\App\Http\Controllers\Cliente\AgendamientoClienteController::class, 'cancelar'])->name('clases.cancelar');
         
         // Redistribución de créditos
         Route::get('/compras/{id}/distribuciones', [CompraController::class, 'obtenerDistribuciones'])->name('compras.distribuciones');
@@ -137,6 +146,12 @@ Route::middleware(['auth'])->group(function () {
         
         // Buscar beneficiario por email
         Route::post('/beneficiarios/buscar', [CompraController::class, 'buscarBeneficiario'])->name('beneficiarios.buscar');
+        
+        // Reportes
+        Route::get('/reportes', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'index'])->name('reportes.index');
+        Route::get('/reportes/compra/{id}/pdf', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'generarPDF'])->name('reportes.compra.pdf');
+        Route::get('/reportes/listado/pdf', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'generarListadoPDF'])->name('reportes.listado.pdf');
+        Route::get('/reportes/excel', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'exportarExcel'])->name('reportes.excel');
     });
 
     // ============================================
