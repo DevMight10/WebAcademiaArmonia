@@ -20,23 +20,23 @@ class UserSeeder extends Seeder
 
         // Crear usuario administrador por defecto
         User::firstOrCreate(
-            ['email' => 'admin@armonia.com'],
+            ['email' => 'admin@academiaarmonia.com'],
             [
                 'name' => 'Administrador Sistema',
-                'password' => Hash::make('admin123'),
+                'password' => Hash::make('password123'),
                 'role_id' => $adminRole->id,
                 'email_verified_at' => now(),
             ]
         );
 
-        // Crear usuario coordinador de ejemplo
+        // Crear usuario coordinador
         $coordinadorRole = Role::where('slug', 'coordinador')->first();
 
         User::firstOrCreate(
-            ['email' => 'coordinador@armonia.com'],
+            ['email' => 'coordinador@academiaarmonia.com'],
             [
-                'name' => 'María Coordinadora',
-                'password' => Hash::make('coord123'),
+                'name' => 'Coordinador Académico',
+                'password' => Hash::make('password123'),
                 'role_id' => $coordinadorRole->id,
                 'email_verified_at' => now(),
             ]

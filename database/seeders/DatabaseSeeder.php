@@ -17,13 +17,14 @@ class DatabaseSeeder extends Seeder
     {
         // Ejecutar seeders en orden de dependencia
         $this->call([
-            RoleSeeder::class,          // Primero los roles
-            UserSeeder::class,          // Luego los usuarios
-            ClienteSeeder::class,       // Clientes vinculados a usuarios
-            BeneficiarioSeeder::class,  // Beneficiarios vinculados a clientes
-            InstrumentoSeeder::class,   // Catálogo de instrumentos
-            InstructorSeeder::class,    // Instructores con especialidades
+            RoleSeeder::class,          // 1. Primero los roles
+            UserSeeder::class,          // 2. Usuarios admin y coordinador
+            InstrumentoSeeder::class,   // 3. Catálogo de instrumentos
+            InstructorSeeder::class,    // 4. Instructores con especialidades
+            ClienteSeeder::class,       // 5. Clientes
+            BeneficiarioSeeder::class,  // 6. Beneficiarios
+            CompraSeeder::class,        // 7. Compras y distribuciones de crédito
+            CitaSeeder::class,          // 8. Citas (requiere todo lo anterior)
         ]);
-
     }
 }

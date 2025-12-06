@@ -123,9 +123,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Instructor
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                CI
-                            </th>
+
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Categoría
                             </th>
@@ -148,26 +146,24 @@
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                                <span class="text-indigo-600 font-semibold text-sm">
+                                        <div class="flex-shrink-0 h-8 w-8">
+                                            <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                                                <span class="text-indigo-600 font-semibold text-xs">
                                                     {{ strtoupper(substr($instructor->user->name, 0, 2)) }}
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="ml-4">
+                                        <div class="ml-3">
                                             <div class="text-sm font-medium text-gray-900">
                                                 {{ $instructor->user->name }}
                                             </div>
-                                            <div class="text-sm text-gray-500">
+                                            <div class="text-xs text-gray-500 truncate max-w-[150px]">
                                                 {{ $instructor->user->email }}
                                             </div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $instructor->ci }}
-                                </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @php
                                         $categoria = App\Enums\CategoriaInstructor::from($instructor->categoria);
