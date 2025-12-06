@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
+use App\Http\Requests\Auth\LoginRequest; // [NEW] Importar Request personalizado
+
 class LoginController extends Controller
 {
     /**
@@ -25,30 +27,14 @@ class LoginController extends Controller
     /**
      * Handle login request.
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        // Validar credenciales
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ], [
-            'email.required' => 'El correo electrónico es obligatorio.',
-            'email.email' => 'Ingresa un correo electrónico válido.',
-            'password.required' => 'La contraseña es obligatoria.',
-        ]);
+        $request->authenticate(); // [UPDATED] Maneja Rate Limiting y Auth
 
-        // Intentar autenticación
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+        $request->session()->regenerate();
 
-            // Redirigir según el rol del usuario
-            return redirect()->intended(route('dashboard'));
-        }
-
-        // Si falla la autenticación
-        throw ValidationException::withMessages([
-            'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ]);
+        // Redirigir según el rol del usuario
+        return redirect()->intended(route('dashboard'));
     }
 
     /**
