@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('beneficiario.dashboard');
         }
 
-        abort(403, 'No tienes un rol asignado.');
+        return view('dashboard');
     })->name('dashboard');
 
     // ============================================
@@ -69,6 +69,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('instructores', \App\Http\Controllers\Admin\InstructorController::class);
         Route::post('instructores/{instructore}/restore', [\App\Http\Controllers\Admin\InstructorController::class, 'restore'])
             ->name('instructores.restore');
+        
+        // RF-10: Generación de Reportes (PDF/Excel)
+        Route::get('/reportes', [\App\Http\Controllers\Admin\ReporteCompraController::class, 'index'])->name('reportes.index');
+        Route::get('/reportes/compra/{id}/pdf', [\App\Http\Controllers\Admin\ReporteCompraController::class, 'generarPDF'])->name('reportes.compra.pdf');
+        Route::post('/reportes/listado/pdf', [\App\Http\Controllers\Admin\ReporteCompraController::class, 'generarListadoPDF'])->name('reportes.listado.pdf');
+        Route::post('/reportes/excel', [\App\Http\Controllers\Admin\ReporteCompraController::class, 'exportarExcel'])->name('reportes.excel');
     });
 
     // ============================================
@@ -102,9 +108,9 @@ Route::middleware(['auth'])->group(function () {
     // RUTAS DE CLIENTE
     // ============================================
     Route::middleware(['role:cliente'])->prefix('cliente')->name('cliente.')->group(function () {
-        // Dashboard del cliente
         Route::get('/dashboard', function () {
-            return view('cliente.dashboard');
+            $cliente = auth()->user()->cliente;
+            return view('cliente.dashboard', compact('cliente'));
         })->name('dashboard');
 
         // RF-01.1: Visualizar Paquetes de Créditos
@@ -123,18 +129,12 @@ Route::middleware(['auth'])->group(function () {
         
         // Buscar beneficiario por email
         Route::post('/beneficiarios/buscar', [CompraController::class, 'buscarBeneficiario'])->name('beneficiarios.buscar');
-        
-        // RF-10: Generación de Reportes (PDF/Excel)
-        Route::get('/reportes', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'index'])->name('reportes.index');
-        Route::get('/reportes/compra/{id}/pdf', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'generarPDF'])->name('reportes.compra.pdf');
-        Route::post('/reportes/listado/pdf', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'generarListadoPDF'])->name('reportes.listado.pdf');
-        Route::post('/reportes/excel', [\App\Http\Controllers\Cliente\ReporteCompraController::class, 'exportarExcel'])->name('reportes.excel');
     });
 
     // ============================================
     // RUTAS DE BENEFICIARIO
     // ============================================
-    Route::prefix('beneficiario')->name('beneficiario.')->middleware(['auth', 'role:beneficiario'])->group(function () {
+    Route::middleware(['auth', 'role:beneficiario'])->prefix('beneficiario')->name('beneficiario.')->group(function () {
         Route::get('/dashboard', function () {
             return view('beneficiario.dashboard');
         })->name('dashboard');

@@ -119,7 +119,7 @@
     {{-- Encabezado --}}
     <div class="header">
         <h1>Academia Armonía</h1>
-        <p>Listado de Compras - {{ $cliente->user->name }}</p>
+        <p>Listado de Compras - {{ "Sistema Academia Armonía" }}</p>
         <p>Generado el {{ date('d/m/Y H:i') }}</p>
     </div>
 
@@ -148,11 +148,11 @@
     {{-- Estadísticas --}}
     <div class="stats">
         <div class="stat-item">
-            <span class="stat-label">Total Compras</span>
+            <span class="stat-label">Cantidad Compras</span>
             <span class="stat-value">{{ $totalCompras }}</span>
         </div>
         <div class="stat-item">
-            <span class="stat-label">Total Gastado</span>
+            <span class="stat-label">Total Compras</span>
             <span class="stat-value">{{ number_format($totalGastado, 2) }} Bs</span>
         </div>
         <div class="stat-item">
@@ -208,3 +208,4 @@
     </div>
 </body>
 </html>
+

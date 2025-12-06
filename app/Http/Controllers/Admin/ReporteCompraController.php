@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Cliente;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Compra;
@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 
 /**
- * Controlador para generación de reportes de compras
+ * Controlador para generación de reportes de compras (Admin)
  * Implementa exportación a PDF y Excel con filtros
  */
 class ReporteCompraController extends Controller
@@ -21,11 +21,8 @@ class ReporteCompraController extends Controller
      */
     public function index(Request $request)
     {
-        $cliente = auth()->user()->cliente;
-        
-        // Obtener compras del cliente con filtros aplicados
-        $query = Compra::where('cliente_id', $cliente->id)
-            ->with(['distribuciones.beneficiario.user']);
+        // Obtener TODAS las compras del sistema (Admin ve todo)
+        $query = Compra::with(['cliente.user', 'distribuciones.beneficiario.user']);
         
         // Aplicar filtros si existen
         if ($request->filled('fecha_inicio')) {
@@ -61,7 +58,7 @@ class ReporteCompraController extends Controller
         $totalGastado = $compras->sum('total');
         $totalMinutos = $compras->sum('minutos_totales');
         
-        return view('cliente.reportes.index', compact(
+        return view('admin.reportes.index', compact(
             'compras',
             'totalCompras',
             'totalGastado',
@@ -74,16 +71,13 @@ class ReporteCompraController extends Controller
      */
     public function generarPDF($id)
     {
-        $cliente = auth()->user()->cliente;
-        
-        // Obtener la compra con sus relaciones
+        // Obtener la compra con sus relaciones (Admin puede ver cualquier compra)
         $compra = Compra::where('id', $id)
-            ->where('cliente_id', $cliente->id)
             ->with(['distribuciones.beneficiario.user', 'cliente.user'])
             ->firstOrFail();
         
         // Generar PDF usando la vista blade
-        $pdf = Pdf::loadView('cliente.reportes.pdf.compra', compact('compra'));
+        $pdf = Pdf::loadView('admin.reportes.pdf.compra', compact('compra'));
         
         // Configurar orientación y tamaño
         $pdf->setPaper('letter', 'portrait');
@@ -99,11 +93,8 @@ class ReporteCompraController extends Controller
      */
     public function generarListadoPDF(Request $request)
     {
-        $cliente = auth()->user()->cliente;
-        
         // Aplicar los mismos filtros que en index
-        $query = Compra::where('cliente_id', $cliente->id)
-            ->with(['distribuciones.beneficiario.user']);
+        $query = Compra::with(['cliente.user', 'distribuciones.beneficiario.user']);
         
         if ($request->filled('fecha_inicio')) {
             $query->whereDate('created_at', '>=', $request->fecha_inicio);
@@ -142,13 +133,12 @@ class ReporteCompraController extends Controller
         ];
         
         // Generar PDF del listado
-        $pdf = Pdf::loadView('cliente.reportes.pdf.listado', compact(
+        $pdf = Pdf::loadView('admin.reportes.pdf.listado', compact(
             'compras',
             'totalCompras',
             'totalGastado',
             'totalMinutos',
-            'filtros',
-            'cliente'
+            'filtros'
         ));
         
         $pdf->setPaper('letter', 'landscape'); // Horizontal para tabla
@@ -163,11 +153,8 @@ class ReporteCompraController extends Controller
      */
     public function exportarExcel(Request $request)
     {
-        $cliente = auth()->user()->cliente;
-        
         // Aplicar filtros
-        $query = Compra::where('cliente_id', $cliente->id)
-            ->with(['distribuciones.beneficiario.user']);
+        $query = Compra::with(['cliente.user', 'distribuciones.beneficiario.user']);
         
         if ($request->filled('fecha_inicio')) {
             $query->whereDate('created_at', '>=', $request->fecha_inicio);

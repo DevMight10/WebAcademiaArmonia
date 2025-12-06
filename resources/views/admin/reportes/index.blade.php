@@ -1,8 +1,8 @@
-@extends('layouts.cliente')
+@extends('layouts.admin')
 
 @section('title', 'Reportes de Compras')
 
-@section('cliente-content')
+@section('admin-content')
 {{-- Encabezado --}}
 <div class="mb-8">
     <h1 class="text-3xl font-bold text-gray-900 mb-2">
@@ -20,7 +20,7 @@
         <h2 class="text-xl font-bold text-gray-800">Filtros de Búsqueda</h2>
     </div>
 
-    <form method="GET" action="{{ route('cliente.reportes.index') }}" id="form-filtros">
+    <form method="GET" action="{{ route('admin.reportes.index') }}" id="form-filtros">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {{-- Fecha Inicio --}}
             <div>
@@ -70,6 +70,7 @@
                        id="monto_min" 
                        name="monto_min"
                        value="{{ request('monto_min') }}"
+                       min="0"
                        step="0.01"
                        placeholder="0.00"
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
@@ -84,6 +85,7 @@
                        id="monto_max" 
                        name="monto_max"
                        value="{{ request('monto_max') }}"
+                       min="0"
                        step="0.01"
                        placeholder="0.00"
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
@@ -98,7 +100,7 @@
                 </svg>
                 Aplicar Filtros
             </button>
-            <a href="{{ route('cliente.reportes.index') }}" 
+            <a href="{{ route('admin.reportes.index') }}" 
                class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-colors">
                 Limpiar Filtros
             </a>
@@ -110,14 +112,14 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
     <x-card>
         <div class="text-center">
-            <p class="text-sm text-gray-500 mb-2">Total de Compras</p>
+            <p class="text-sm text-gray-500 mb-2">Cantidad de Compras</p>
             <p class="text-4xl font-bold text-indigo-600">{{ $totalCompras }}</p>
         </div>
     </x-card>
     
     <x-card>
         <div class="text-center">
-            <p class="text-sm text-gray-500 mb-2">Total Gastado</p>
+            <p class="text-sm text-gray-500 mb-2">Total Compras</p>
             <p class="text-4xl font-bold text-emerald-600">{{ number_format($totalGastado, 2) }}</p>
             <p class="text-xs text-gray-500 mt-1">Bs</p>
         </div>
@@ -140,7 +142,7 @@
 
     <div class="flex flex-wrap gap-3">
         {{-- Exportar a PDF --}}
-        <form method="POST" action="{{ route('cliente.reportes.listado.pdf') }}" class="inline-block">
+        <form method="POST" action="{{ route('admin.reportes.listado.pdf') }}" class="inline-block">
             @csrf
             {{-- Pasar filtros al PDF --}}
             <input type="hidden" name="fecha_inicio" value="{{ request('fecha_inicio') }}">
@@ -159,7 +161,7 @@
         </form>
 
         {{-- Exportar a Excel --}}
-        <form method="POST" action="{{ route('cliente.reportes.excel') }}" class="inline-block">
+        <form method="POST" action="{{ route('admin.reportes.excel') }}" class="inline-block">
             @csrf
             {{-- Pasar filtros al Excel --}}
             <input type="hidden" name="fecha_inicio" value="{{ request('fecha_inicio') }}">
@@ -223,7 +225,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                <a href="{{ route('cliente.reportes.compra.pdf', $compra->id) }}" 
+                                <a href="{{ route('admin.reportes.compra.pdf', $compra->id) }}" 
                                    class="text-red-600 hover:text-red-900 font-semibold">
                                     PDF
                                 </a>
@@ -246,3 +248,4 @@
     </x-card>
 @endif
 @endsection
+
