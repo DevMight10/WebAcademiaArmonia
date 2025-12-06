@@ -90,18 +90,26 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/compras/{id}', [CompraCoordinadorController::class, 'show'])->name('compras.show');
         Route::post('/compras/{id}/aprobar', [CompraCoordinadorController::class, 'aprobar'])->name('compras.aprobar');
         Route::post('/compras/{id}/rechazar', [CompraCoordinadorController::class, 'rechazar'])->name('compras.rechazar');
+        
+        // Gestión de citas
+        Route::get('/citas', [\App\Http\Controllers\Coordinador\CitaController::class, 'index'])->name('citas.index');
+        Route::post('/citas/{id}/confirmar', [\App\Http\Controllers\Coordinador\CitaController::class, 'confirmar'])->name('citas.confirmar');
+        Route::post('/citas/{id}/rechazar', [\App\Http\Controllers\Coordinador\CitaController::class, 'rechazar'])->name('citas.rechazar');
+        Route::post('/citas/{id}/completar', [\App\Http\Controllers\Coordinador\CitaController::class, 'completar'])->name('citas.completar');
+        Route::get('/calendario', [\App\Http\Controllers\Coordinador\CitaController::class, 'calendario'])->name('calendario');
     });
 
 
     // ============================================
     // RUTAS DE INSTRUCTOR
     // ============================================
-    Route::prefix('instructor')->name('instructor.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('instructor.dashboard');
-        })->name('dashboard');
-
-        // TODO: Agregar rutas de clases
+    Route::middleware(['role:instructor'])->prefix('instructor')->name('instructor.')->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Instructor\InstructorController::class, 'dashboard'])->name('dashboard');
+        
+        // Mis Clases
+        Route::get('/citas', [\App\Http\Controllers\Instructor\InstructorController::class, 'misCitas'])->name('citas.index');
+        Route::post('/citas/{id}/completar', [\App\Http\Controllers\Instructor\InstructorController::class, 'marcarCompletada'])->name('citas.completar');
     });
 
     // ============================================
@@ -141,5 +149,18 @@ Route::middleware(['auth'])->group(function () {
 
         // Créditos
         Route::get('/creditos', [\App\Http\Controllers\Beneficiario\CreditoController::class, 'index'])->name('creditos.index');
+        
+        // Agendamiento de clases
+        Route::get('/agendamiento', [\App\Http\Controllers\Beneficiario\AgendamientoController::class, 'index'])->name('agendamiento.index');
+        Route::get('/agendamiento/instructores', [\App\Http\Controllers\Beneficiario\AgendamientoController::class, 'obtenerInstructores'])->name('agendamiento.instructores');
+        Route::get('/agendamiento/disponibilidad', [\App\Http\Controllers\Beneficiario\AgendamientoController::class, 'obtenerDisponibilidad'])->name('agendamiento.disponibilidad');
+        Route::post('/agendamiento', [\App\Http\Controllers\Beneficiario\AgendamientoController::class, 'store'])->name('agendamiento.store');
+        
+        // Mis citas
+        Route::get('/citas', [\App\Http\Controllers\Beneficiario\AgendamientoController::class, 'misCitas'])->name('citas.index');
+        Route::post('/citas/{id}/cancelar', [\App\Http\Controllers\Beneficiario\AgendamientoController::class, 'cancelar'])->name('citas.cancelar');
+        
+        // Historial de clases
+        Route::get('/historial', [\App\Http\Controllers\Beneficiario\AgendamientoController::class, 'historial'])->name('historial.index');
     });
 });

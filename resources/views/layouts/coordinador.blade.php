@@ -24,6 +24,15 @@
                     Gestión de Compras
                 </a>
 
+                {{-- Gestión de Citas --}}
+                <a href="{{ route('coordinador.citas.index') }}"
+                   class="block px-4 py-2.5 rounded-xl {{ request()->routeIs('coordinador.citas.*') ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-700 hover:bg-indigo-50 hover:text-indigo-700' }} transition-all font-medium">
+                    <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    Gestión de Citas
+                </a>
+
                 {{-- Calendario (Próximamente) --}}
                 <a href="#"
                    class="block px-4 py-2.5 rounded-xl text-gray-400 cursor-not-allowed opacity-50 font-medium">
