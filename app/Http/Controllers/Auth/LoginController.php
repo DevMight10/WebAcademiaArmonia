@@ -21,7 +21,7 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         $request->authenticate(); // [UPDATED] Maneja Rate Limiting y Auth
 

@@ -13,6 +13,7 @@ class InstrumentoController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * Supports AJAX requests for live filtering (returns JSON).
      */
     public function index(Request $request)
     {
@@ -38,6 +39,19 @@ class InstrumentoController extends Controller
 
         // Obtener categorías para el filtro
         $categorias = CategoriaInstrumento::cases();
+
+        // Si es una petición AJAX, retornar JSON
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'instrumentos' => $instrumentos->items(),
+                'pagination' => [
+                    'current_page' => $instrumentos->currentPage(),
+                    'last_page' => $instrumentos->lastPage(),
+                    'per_page' => $instrumentos->perPage(),
+                    'total' => $instrumentos->total(),
+                ],
+            ]);
+        }
 
         return view('admin.instrumentos.index', compact('instrumentos', 'categorias'));
     }
