@@ -55,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
                 'instrumentos' => \App\Models\Instrumento::count(),
                 'instructores' => \App\Models\Instructor::count(),
                 'clientes' => \App\Models\Cliente::count(),
-                'ventas' => \App\Models\Compra::where('estado', 'pagado_y_confirmado')->sum('total') ?? 0,
+                'compras' => \App\Models\Compra::sum('total') ?? 0,
             ];
             return view('admin.dashboard', compact('stats'));
         })->name('dashboard');
@@ -69,6 +69,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('instructores', \App\Http\Controllers\Admin\InstructorController::class);
         Route::post('instructores/{instructore}/restore', [\App\Http\Controllers\Admin\InstructorController::class, 'restore'])
             ->name('instructores.restore');
+        
+        // Gestión de Clientes
+        Route::resource('clientes', \App\Http\Controllers\Admin\ClienteController::class)->only(['index', 'show', 'destroy']);
+        
+        // Gestión de Beneficiarios
+        Route::resource('beneficiarios', \App\Http\Controllers\Admin\BeneficiarioController::class)->only(['index', 'show', 'destroy']);
         
         // RF-10: Generación de Reportes (PDF/Excel)
         Route::get('/reportes', [\App\Http\Controllers\Admin\ReporteCompraController::class, 'index'])->name('reportes.index');

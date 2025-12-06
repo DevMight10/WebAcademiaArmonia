@@ -72,8 +72,8 @@
                 </div>
                 <div class="ml-5 w-0 flex-1">
                     <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">Ventas (Bs)</dt>
-                        <dd class="text-lg font-semibold text-gray-900">{{ number_format($stats['ventas'], 2) }}</dd>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Compras (Bs)</dt>
+                        <dd class="text-lg font-semibold text-gray-900">{{ number_format($stats['compras'], 2) }}</dd>
                     </dl>
                 </div>
             </div>
@@ -95,7 +95,6 @@
                         </svg>
                         <div class="ml-4">
                             <h3 class="text-sm font-semibold text-gray-900">Gestionar Instrumentos</h3>
-                            <p class="text-xs text-gray-600 mt-1">RF-05.1</p>
                         </div>
                     </div>
                 </a>
@@ -108,7 +107,6 @@
                         </svg>
                         <div class="ml-4">
                             <h3 class="text-sm font-semibold text-gray-900">Gestionar Instructores</h3>
-                            <p class="text-xs text-gray-600 mt-1">RF-05.2</p>
                         </div>
                     </div>
                 </a>
@@ -121,7 +119,6 @@
                         </svg>
                         <div class="ml-4">
                             <h3 class="text-sm font-semibold text-gray-900">Ver Reportes</h3>
-                            <p class="text-xs text-gray-600 mt-1">RF-06.1, RF-06.2</p>
                         </div>
                     </div>
                 </a>
