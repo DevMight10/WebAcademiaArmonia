@@ -1,22 +1,34 @@
-@extends('layouts.app')
+@extends('layouts.beneficiario')
 
-@section('title', 'Dashboard Estudiante')
+@section('title', 'Dashboard Beneficiario')
 
-@section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Header -->
+@section('beneficiario-content')
+    {{-- Header --}}
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Dashboard Estudiante</h1>
+        <h1 class="text-3xl font-bold text-gray-900">Dashboard Beneficiario</h1>
         <p class="mt-2 text-sm text-gray-600">Bienvenido, {{ auth()->user()->name }}</p>
     </div>
 
-    <!-- Créditos Disponibles (Destacado) -->
+    @php
+        $beneficiario = auth()->user()->beneficiario;
+        $totalDisponible = 0;
+        $totalConsumido = 0;
+        
+        if ($beneficiario) {
+            $totalDisponible = $beneficiario->distribuciones->sum('minutos_disponibles');
+            $totalConsumido = $beneficiario->distribuciones->sum('minutos_consumidos');
+        }
+        
+        $clasesEquivalentes = $totalDisponible > 0 ? floor($totalDisponible / 60) : 0;
+    @endphp
+
+    {{-- Créditos Disponibles (Destacado) --}}
     <div class="bg-slate-800 rounded-lg shadow-lg p-8 mb-8 text-white">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-slate-300 text-sm font-medium">Tus Créditos Disponibles</p>
-                <p class="text-5xl font-bold mt-2">-- minutos</p>
-                <p class="text-slate-300 text-sm mt-2">Equivalente a -- clases de 60 minutos</p>
+                <p class="text-5xl font-bold mt-2">{{ $totalDisponible }} minutos</p>
+                <p class="text-slate-300 text-sm mt-2">Equivalente a {{ $clasesEquivalentes }} clases de 60 minutos</p>
             </div>
             <div class="hidden md:block">
                 <svg class="h-24 w-24 text-white opacity-20" fill="currentColor" viewBox="0 0 20 20">
@@ -26,9 +38,9 @@
         </div>
     </div>
 
-    <!-- Estadísticas -->
+    {{-- Estadísticas --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Clases Tomadas -->
+        {{-- Clases Tomadas --}}
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
@@ -39,13 +51,13 @@
                 <div class="ml-5 w-0 flex-1">
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Clases Tomadas</dt>
-                        <dd class="text-lg font-semibold text-gray-900">--</dd>
+                        <dd class="text-lg font-semibold text-gray-900">0</dd>
                     </dl>
                 </div>
             </div>
         </div>
 
-        <!-- Créditos Consumidos -->
+        {{-- Créditos Consumidos --}}
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
@@ -56,13 +68,13 @@
                 <div class="ml-5 w-0 flex-1">
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Créditos Consumidos</dt>
-                        <dd class="text-lg font-semibold text-gray-900">-- min</dd>
+                        <dd class="text-lg font-semibold text-gray-900">{{ $totalConsumido }} min</dd>
                     </dl>
                 </div>
             </div>
         </div>
 
-        <!-- Próxima Clase -->
+        {{-- Próxima Clase --}}
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
@@ -80,9 +92,9 @@
         </div>
     </div>
 
-    <!-- Acciones Principales -->
+    {{-- Acciones Principales --}}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Consultar Saldo -->
+        {{-- Consultar Saldo --}}
         <div class="bg-white rounded-lg shadow">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h2 class="text-lg font-semibold text-gray-900">Mis Créditos</h2>
@@ -92,17 +104,16 @@
                     Consulta el saldo detallado de tus créditos disponibles
                     y el historial de consumo en tus clases musicales.
                 </p>
-                <a href="#" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+                <a href="{{ route('beneficiario.creditos.index') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
                     <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
                     Ver Detalle de Créditos
                 </a>
-                <p class="text-xs text-gray-500 mt-2">RF-02.1</p>
             </div>
         </div>
 
-        <!-- Agendar Clase -->
+        {{-- Agendar Clase --}}
         <div class="bg-white rounded-lg shadow">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h2 class="text-lg font-semibold text-gray-900">Agendar Clase</h2>
@@ -122,5 +133,4 @@
             </div>
         </div>
     </div>
-</div>
 @endsection

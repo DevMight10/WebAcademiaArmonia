@@ -121,9 +121,9 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is an estudiante/beneficiario.
+     * Check if user is a beneficiario.
      */
-    public function isEstudiante(): bool
+    public function isBeneficiario(): bool
     {
         return $this->beneficiario()->exists();
     }

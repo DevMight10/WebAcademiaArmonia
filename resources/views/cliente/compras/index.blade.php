@@ -128,7 +128,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                 </svg>
                                 <span class="font-medium">{{ $dist->beneficiario->user->name ?? 'N/A' }}</span>
-                                <span class="text-gray-500 text-xs ml-2">({{ $dist->minutos_asignados }} min)</span>
+                                <span class="text-gray-500 text-xs ml-2">({{ $dist->minutos_disponibles }}/{{ $dist->minutos_asignados }} min disponibles)</span>
                             </li>
                         @endforeach
                     </ul>
@@ -149,8 +149,8 @@
                     </div>
                 @endif
 
-                {{-- Botón de acción --}}
-                <div class="mt-auto">
+                {{-- Botones de acción --}}
+                <div class="mt-auto space-y-2">
                     <a href="{{ route('cliente.compras.confirmacion', $compra->id) }}"
                        class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all text-sm">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,9 +159,189 @@
                         </svg>
                         Ver Detalles
                     </a>
+                    
+                    @if($compra->estado == 'Completada')
+                        <button type="button" 
+                                onclick="abrirModalRedistribucion({{ $compra->id }})"
+                                class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all text-sm">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                            </svg>
+                            Redistribuir Créditos
+                        </button>
+                    @endif
                 </div>
             </x-card>
         @endforeach
     </div>
 @endif
+
+{{-- Modal de Redistribución de Créditos --}}
+<div id="modal-redistribucion" class="hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 " onclick="cerrarModalRedistribucion()"></div>
+    
+    <div class="relative flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-2xl p-6 max-w-2xl w-full shadow-2xl ring-1 ring-gray-900/10">
+            <h4 class="text-xl font-bold mb-4 text-gray-900">Redistribuir Créditos</h4>
+            
+            <form id="form-redistribucion" method="POST">
+                @csrf
+                @method('PUT')
+                
+                <div id="redistribucion-content" class="space-y-4 mb-6">
+                    {{-- Se llena dinámicamente con JavaScript --}}
+                </div>
+
+                <div class="bg-gray-100 rounded-xl p-4 mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-medium">Total disponible:</span>
+                        <span id="total-disponible" class="font-bold text-lg">0 min</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-medium">Total asignado:</span>
+                        <span id="total-asignado" class="font-bold text-lg text-indigo-600">0 min</span>
+                    </div>
+                </div>
+
+                <div id="error-redistribucion" class="hidden bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
+                    <p class="text-red-600 text-sm"></p>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" onclick="cerrarModalRedistribucion()" class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 font-medium transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 px-4 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 font-medium transition-colors">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+let compraActual = null;
+let distribuciones = [];
+
+async function abrirModalRedistribucion(compraId) {
+    compraActual = compraId;
+    
+    // Obtener datos de la compra
+    try {
+        const response = await fetch(`/cliente/compras/${compraId}/distribuciones`);
+        const data = await response.json();
+        
+        distribuciones = data.distribuciones;
+        
+        // Generar controles de redistribución
+        const container = document.getElementById('redistribucion-content');
+        container.innerHTML = '';
+        
+        let totalDisponible = 0;
+        
+        distribuciones.forEach((dist, index) => {
+            totalDisponible += dist.minutos_disponibles;
+            
+            const div = document.createElement('div');
+            div.className = 'bg-white border border-gray-200 rounded-xl p-4';
+            div.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center">
+                        <div class="bg-indigo-600 text-white rounded-full w-10 h-10 flex items-center justify-center mr-3 font-bold">
+                            ${index + 1}
+                        </div>
+                        <div>
+                            <p class="font-semibold">${dist.beneficiario_nombre}</p>
+                            <p class="text-xs text-gray-500">Disponible: ${dist.minutos_disponibles} min</p>
+                        </div>
+                    </div>
+                    <span class="text-2xl font-bold text-indigo-600" id="display-${index}">0</span>
+                </div>
+                <input type="range" 
+                       min="0" 
+                       max="${dist.minutos_disponibles}" 
+                       value="${dist.minutos_disponibles}"
+                       class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                       id="slider-${index}"
+                       data-dist-id="${dist.id}"
+                       oninput="actualizarRedistribucion(${index}, this.value)">
+                <input type="hidden" name="distribuciones[${dist.id}]" id="redistribucion-${index}" value="${dist.minutos_disponibles}">
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>0 min</span>
+                    <span>${dist.minutos_disponibles} min</span>
+                </div>
+            `;
+            container.appendChild(div);
+            
+            // Inicializar display
+            document.getElementById(`display-${index}`).textContent = dist.minutos_disponibles;
+        });
+        
+        document.getElementById('total-disponible').textContent = `${totalDisponible} min`;
+        document.getElementById('total-asignado').textContent = `${totalDisponible} min`;
+        
+        // Configurar action del formulario
+        document.getElementById('form-redistribucion').action = `/cliente/compras/${compraId}/redistribuir`;
+        
+        // Mostrar modal
+        document.getElementById('modal-redistribucion').classList.remove('hidden');
+    } catch (error) {
+        console.error('Error al cargar distribuciones:', error);
+        alert('Error al cargar los datos de la compra');
+    }
+}
+
+function cerrarModalRedistribucion() {
+    document.getElementById('modal-redistribucion').classList.add('hidden');
+    document.getElementById('error-redistribucion').classList.add('hidden');
+}
+
+function actualizarRedistribucion(index, valor) {
+    document.getElementById(`display-${index}`).textContent = valor;
+    document.getElementById(`redistribucion-${index}`).value = valor;
+    
+    // Calcular total asignado
+    let totalAsignado = 0;
+    distribuciones.forEach((_, i) => {
+        totalAsignado += parseInt(document.getElementById(`redistribucion-${i}`).value || 0);
+    });
+    
+    document.getElementById('total-asignado').textContent = `${totalAsignado} min`;
+}
+
+// Manejar envío del formulario
+document.getElementById('form-redistribucion').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const errorDiv = document.getElementById('error-redistribucion');
+    
+    try {
+        const response = await fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            alert('Créditos redistribuidos exitosamente');
+            window.location.reload();
+        } else {
+            errorDiv.querySelector('p').textContent = data.message || 'Error al redistribuir créditos';
+            errorDiv.classList.remove('hidden');
+        }
+    } catch (error) {
+        errorDiv.querySelector('p').textContent = 'Error de conexión. Intenta de nuevo.';
+        errorDiv.classList.remove('hidden');
+    }
+});
+</script>
+@endpush
 @endsection
+

@@ -9,9 +9,6 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    /**
-     * Show the login form.
-     */
     public function showLoginForm()
     {
         // Si ya está autenticado, redirigir al dashboard
@@ -22,9 +19,6 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    /**
-     * Handle login request.
-     */
     public function login(Request $request)
     {
         // Validar credenciales
@@ -51,9 +45,6 @@ class LoginController extends Controller
         ]);
     }
 
-    /**
-     * Handle logout request.
-     */
     public function logout(Request $request)
     {
         Auth::logout();
