@@ -32,6 +32,14 @@ class Beneficiario extends Model
     }
 
     /**
+     * Get the citas for the beneficiario.
+     */
+    public function citas()
+    {
+        return $this->hasMany(Cita::class);
+    }
+
+    /**
      * Get total available credits.
      */
     public function getSaldoCreditosAttribute()

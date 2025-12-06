@@ -7,17 +7,13 @@ use Illuminate\Validation\Rule;
 
 class UpdateInstructorRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
-        return true; // TODO: Implement authorization logic
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
+
     public function rules(): array
     {
         $instructor = $this->route('instructore'); // Laravel pluraliza 'instructor' a 'instructore' en rutas resource
@@ -36,9 +32,7 @@ class UpdateInstructorRequest extends FormRequest
         ];
     }
 
-    /**
-     * Get custom messages for validator errors.
-     */
+
     public function messages(): array
     {
         return [

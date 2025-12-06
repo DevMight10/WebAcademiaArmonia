@@ -70,12 +70,8 @@
             <p class="text-lg font-medium text-gray-900">{{ $beneficiario->telefono ?? 'N/A' }}</p>
         </div>
         <div>
-            <p class="text-sm text-gray-600">Fecha de Nacimiento</p>
-            <p class="text-lg font-medium text-gray-900">{{ $beneficiario->fecha_nacimiento->format('d/m/Y') }}</p>
-        </div>
-        <div>
-            <p class="text-sm text-gray-600">Nivel Educativo</p>
-            <p class="text-lg font-medium text-gray-900">{{ $beneficiario->nivel_educativo }}</p>
+            <p class="text-sm text-gray-600">Fecha de Registro</p>
+            <p class="text-lg font-medium text-gray-900">{{ $beneficiario->created_at->format('d/m/Y') }}</p>
         </div>
     </div>
 </x-card>
